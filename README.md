@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/logo.png" width="400" alt="AstraGuard AI Logo">
+</div>
+
 # 🛰️ AstraGuard AI - Synaptix Frontier AI Hack
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
