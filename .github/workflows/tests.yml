@@ -42,7 +42,7 @@ jobs:
     
     - name: Run unit tests
       run: |
-        python -m pytest tests/ -v --tb=short --timeout=30 --maxfail=10
+        python -m pytest tests/ -v --tb=short --timeout=10 --maxfail=10
     
     - name: Run coverage analysis
       run: |
@@ -55,7 +55,7 @@ jobs:
           --cov-report=term-missing \
           --cov-report=xml \
           --cov-fail-under=80 \
-          --timeout=30 \
+          --timeout=10 \
           -v
     
     - name: Upload coverage to Codecov

@@ -190,7 +190,7 @@ class SystemHealthMonitor:
         else:
             self._system_status = HealthStatus.HEALTHY
     
-    def get_component_health(self, component: str) -> Optional[ComponentHealth]:
+    def get_component_health(self, component: str) -> ComponentHealth:
         """
         Get health status of a specific component.
         
@@ -198,10 +198,19 @@ class SystemHealthMonitor:
             component: Component name
         
         Returns:
-            ComponentHealth or None if not registered
+            ComponentHealth object (auto-registers if not found)
         """
         with self._component_lock:
-            return self._components.get(component)
+            # Auto-register if not found to ensure never-None contract
+            if component not in self._components:
+                self._components[component] = ComponentHealth(
+                    name=component,
+                    status=HealthStatus.UNKNOWN,
+                    last_updated=datetime.now(),
+                    metadata={},
+                )
+                logger.debug(f"Auto-registered component: {component}")
+            return self._components[component]
     
     def get_all_health(self) -> Dict[str, Dict]:
         """

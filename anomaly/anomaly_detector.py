@@ -32,6 +32,21 @@ def load_model() -> bool:
     health_monitor = get_health_monitor()
     health_monitor.register_component("anomaly_detector")
     
+    # Try to import numpy - if it fails, use heuristic mode
+    try:
+        import numpy as np
+    except ImportError as e:
+        logger.warning(f"numpy not available: {e}. Using heuristic mode.")
+        _USING_HEURISTIC_MODE = True
+        _MODEL_LOADED = False
+        health_monitor.mark_degraded(
+            "anomaly_detector",
+            error_msg="numpy import failed - heuristic mode active",
+            fallback_active=True,
+            metadata={"mode": "heuristic", "reason": str(e)}
+        )
+        return False
+    
     try:
         if os.path.exists(MODEL_PATH):
             with open(MODEL_PATH, "rb") as f:

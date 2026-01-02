@@ -227,11 +227,23 @@ class MissionPhasePolicyEngine:
     
     def _classify_severity(self, score: float) -> SeverityLevel:
         """Classify numeric severity score into levels."""
-        if score >= 0.9:
+        # Handle None/null score with safe default
+        if score is None:
+            return SeverityLevel.LOW
+        
+        # Convert to float, default to 0 if conversion fails
+        try:
+            score_value = float(score)
+        except (TypeError, ValueError):
+            logger.warning(f"Invalid severity score {score}, defaulting to LOW")
+            return SeverityLevel.LOW
+        
+        # Classify based on thresholds
+        if score_value >= 0.9:
             return SeverityLevel.CRITICAL
-        elif score >= 0.7:
+        elif score_value >= 0.7:
             return SeverityLevel.HIGH
-        elif score >= 0.4:
+        elif score_value >= 0.4:
             return SeverityLevel.MEDIUM
         else:
             return SeverityLevel.LOW
