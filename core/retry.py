@@ -124,7 +124,7 @@ class Retry:
         kwargs: dict
     ) -> Any:
         """Execute async function with retry logic."""
-        func_name = func.__name__
+        func_name = getattr(func, '__name__', 'unknown')
         last_exception = None
         
         for attempt in range(self.max_attempts):
@@ -186,7 +186,7 @@ class Retry:
         kwargs: dict
     ) -> Any:
         """Execute sync function with retry logic."""
-        func_name = func.__name__
+        func_name = getattr(func, '__name__', 'unknown')
         last_exception = None
         
         for attempt in range(self.max_attempts):
