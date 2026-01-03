@@ -146,17 +146,13 @@ def load_model() -> bool:
             asyncio.set_event_loop(loop)
 
         # Call through retry (handles transient) then circuit breaker (handles cascading)
-        try:
-            result = loop.run_until_complete(
-                _model_loader_cb.call(
-                    _load_model_with_retry,  # Retry wrapper
-                    fallback=_load_model_fallback,
-                )
+        result = loop.run_until_complete(
+            _model_loader_cb.call(
+                _load_model_with_retry,  # Retry wrapper
+                fallback=_load_model_fallback,
             )
-            return result
-        except TypeError:
-            # If circuit breaker call doesn't return awaitable, use fallback
-            return _load_model_fallback()
+        )
+        return result
 
     except CircuitOpenError as e:
         logger.error(f"Circuit breaker open: {e}")
