@@ -13,6 +13,7 @@ import asyncio
 import json
 import uuid
 import logging
+import math
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from dataclasses import dataclass, asdict
@@ -281,9 +282,23 @@ class DistributedResilienceCoordinator:
             # Get leader
             leader = await self.redis.get_leader()
 
-            # Calculate quorum
+            # Calculate quorum using configured threshold
             num_votes = len(votes)
-            quorum_met = num_votes >= len(votes) / 2 + 1  # Majority: >50%
+            total_nodes = num_votes  # Use voting instances as cluster size
+            
+            # Validate quorum threshold is in valid range (0, 1]
+            if not (0 < self.quorum_threshold <= 1):
+                logger.warning(
+                    f"Invalid quorum_threshold {self.quorum_threshold}, "
+                    f"defaulting to 0.5 (majority)"
+                )
+                effective_threshold = 0.5
+            else:
+                effective_threshold = self.quorum_threshold
+            
+            # Calculate required votes for quorum
+            required_votes = math.ceil(effective_threshold * total_nodes)
+            quorum_met = num_votes >= required_votes
 
             # Calculate consensus strength
             if circuit_consensus != "SPLIT_BRAIN":
