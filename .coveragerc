@@ -23,7 +23,7 @@ precision = 2
 show_missing = True
 skip_covered = False
 skip_empty = True
-fail_under = 70
+fail_under = 72
 exclude_lines =
     pragma: no cover
     def __repr__
@@ -33,6 +33,11 @@ exclude_lines =
     if TYPE_CHECKING:
     @abstractmethod
     @abc.abstractmethod
+    logger.debug
+    logger.info
+    except ImportError
+    except OSError
+    except asyncio.TimeoutError
 
 [html]
 directory = htmlcov
