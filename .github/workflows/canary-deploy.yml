@@ -112,7 +112,9 @@ jobs:
         # RUN_MIGRATIONS=false
         EOF
         echo "✅ Environment file created with $(wc -l < .env) lines"
-        cat .env
+        # Security: Do not print .env file to logs (contains GRAFANA_PASSWORD and other secrets)
+        # Verify structure only by listing non-sensitive keys
+        echo "✅ Configuration keys loaded: $(grep -c '^[A-Z_]*=' .env) environment variables"
     
     - name: Build Docker images
       run: |
