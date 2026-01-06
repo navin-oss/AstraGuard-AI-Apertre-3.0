@@ -7,6 +7,7 @@ import logging
 from core.error_handling import StateTransitionError
 from core.component_health import get_health_monitor
 from core.metrics import MISSION_PHASE
+from core.input_validation import MissionPhaseValidator, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -121,45 +122,50 @@ class StateMachine:
         health_monitor = get_health_monitor()
         previous_phase = self.current_phase  # Capture before any validation
 
+
         try:
-            if not isinstance(phase, MissionPhase):
-                raise StateTransitionError(
-                    f"Invalid phase type: {type(phase)}",
-                    component="state_machine",
-                    context={"phase_type": str(type(phase))},
-                )
-
-            # Validate phase using MissionPhaseValidator
             try:
-                validated_phase_str = MissionPhaseValidator.validate_phase(phase.value)
-                validated_phase = MissionPhase(validated_phase_str)
-            except ValidationError as e:
-                raise StateTransitionError(
-                    f"Phase validation failed: {e}",
-                    component="state_machine",
-                    context={"validation_error": str(e)},
-                )
+                # Validate phase string and type
+                if isinstance(phase, MissionPhase):
+                    target_phase_str = phase.value
+                elif isinstance(phase, str):
+                    target_phase_str = phase
+                else:
+                     raise ValidationError(f"Invalid phase type: {type(phase)}")
 
-            if self.current_phase == validated_phase:
-                health_monitor.mark_healthy("state_machine")
-                return {
-                    "success": True,
-                    "previous_phase": self.current_phase.value,
-                    "new_phase": validated_phase.value,
-                    "message": "Already in target phase",
-                }
+                # Use central validator for phase name
+                target_phase_str = MissionPhaseValidator.validate_phase(target_phase_str)
+                
+                # Convert back to Enum if needed for internal consistency
+                try:
+                    target_phase_enum = MissionPhase(target_phase_str)
+                except ValueError:
+                     raise ValidationError(f"Phase {target_phase_str} not found in MissionPhase enum")
 
-            # Check if transition is valid using MissionPhaseValidator
-            try:
-                MissionPhaseValidator.validate_transition(
-                    self.current_phase.value, validated_phase.value
-                )
+                if self.current_phase == target_phase_enum:
+                    health_monitor.mark_healthy("state_machine")
+                    return {
+                        "success": True,
+                        "previous_phase": self.current_phase.value,
+                        "new_phase": target_phase_enum.value,
+                        "message": "Already in target phase",
+                    }
+
+                # Use central validator for transition
+                MissionPhaseValidator.validate_transition(self.current_phase.value, target_phase_str)
             except ValidationError as e:
+                # Map ValidationError to StateTransitionError for API compatibility
                 raise StateTransitionError(
-                    f"Invalid phase transition: {e}",
+                    str(e),
                     component="state_machine",
-                    context={"validation_error": str(e)},
-                )
+                    context={
+                        "current_phase": self.current_phase.value,
+                        "target_phase": str(phase)
+                    }
+                ) from e
+            
+            # If we get here, transition is valid
+            phase = target_phase_enum
 
             self.current_phase = phase
             self.phase_start_time = datetime.now()
