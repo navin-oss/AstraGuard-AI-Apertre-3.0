@@ -36,22 +36,32 @@ export const DashboardHeader: React.FC<Props> = ({ data }) => {
   }, []);
 
   return (
-    <header className="h-[60px] bg-black/90 border-b border-teal-500/20 flex items-center px-6 fixed w-full z-50">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg"></div>
-          <h1 className="text-lg font-bold font-mono text-white tracking-tight">{data.name}</h1>
+    <header className="h-[100px] lg:h-[80px] bg-black/90 backdrop-blur-2xl border-b border-teal-500/50 flex items-center px-6 fixed w-full z-50 shadow-2xl shadow-teal-500/10">
+      {/* Critical: 3-sec scan path */}
+      <div className="flex items-center space-x-6 w-full">
+        {/* MISSION STATUS - PRIMARY (32px) */}
+        <div className="flex items-center space-x-4 min-w-0 flex-shrink-0">
+          <div className="w-16 h-16 bg-gradient-to-br from-teal-500/80 to-cyan-500/80 rounded-2xl glow-teal animate-pulse-slow shadow-2xl" />
+          <div className="min-w-0">
+            <h1 className="text-3xl lg:text-2xl font-black font-mono text-white tracking-tight truncate">{data.name}</h1>
+            <div className="flex items-center space-x-4 mt-1">
+              <span className="px-4 py-2 bg-gray-900/80 text-lg rounded-full text-teal-400 glow-teal font-mono font-bold border border-teal-500/50">
+                {data.phase}
+              </span>
+              <span className="text-3xl">{statusIcon(data.status)}</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center space-x-4 text-xs text-gray-400">
-          <span className={`px-2 py-0.5 rounded-full font-mono transition-all ${isConnected
-              ? 'bg-green-500/10 text-green-400 border border-green-500/20 glow-green'
-              : 'bg-red-500/10 text-red-500 border border-red-500/20 glow-red animate-pulse'
+
+        {/* CONNECTION STATUS - SECONDARY */}
+        <div className="flex items-center space-x-4 ml-auto">
+          <span className={`px-4 py-2 rounded-full text-sm font-mono font-bold border ${isConnected
+              ? 'bg-green-500/20 text-green-400 border-green-400/50 glow-green animate-pulse-slow'
+              : 'bg-red-500/20 text-red-400 border-red-400/50 glow-red'
             }`}>
-            {isConnected ? 'LIVE' : 'OFFLINE'}
+            {isConnected ? '🟢 LIVE' : '🔴 OFFLINE'}
           </span>
-          <span className="text-teal-400">{data.phase}</span>
-          <span>{statusIcon(data.status)}</span>
-          <span>{time}</span>
+          <span className="text-lg font-mono opacity-80">{time}</span>
         </div>
       </div>
     </header>

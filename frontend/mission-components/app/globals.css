@@ -100,4 +100,34 @@ body {
 }
 
 .tab-active-magenta {
-  animation: flicker-magenta 2s infinite 0.5s;}
+  animation: flicker-magenta 2s infinite 0.5s;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes lift-burst {
+  0% { transform: scale(1) translateY(0); box-shadow: var(--glow-teal); }
+  50% { transform: scale(1.08) translateY(-4px); box-shadow: 0 20px 40px rgba(0,245,255,0.6); }
+  100% { transform: scale(1.05) translateY(-2px); box-shadow: var(--glow-teal); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Sticky hierarchy */
+.sticky-hero { position: sticky; top: 0; z-index: 30; }
+.motion-safe\:transition-none { transition: none !important; }
+
+/* Animation Utilities */
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s infinite ease-in-out;
+}

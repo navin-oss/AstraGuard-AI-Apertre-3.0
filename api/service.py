@@ -169,6 +169,9 @@ async def lifespan(app: FastAPI):
 
     # Initialize components
     initialize_components()
+    
+    # Pre-load anomaly detection model async
+    await load_model()
 
     # Initialize observability (if available)
     if OBSERVABILITY_ENABLED:
@@ -376,7 +379,7 @@ async def _process_telemetry(telemetry: TelemetryInput, request_start: float) ->
     }
 
     # Detect anomaly (uses heuristic if model not loaded)
-    is_anomaly, anomaly_score = detect_anomaly(data)
+    is_anomaly, anomaly_score = await detect_anomaly(data)
 
     # Classify fault type
     anomaly_type = classify(data)

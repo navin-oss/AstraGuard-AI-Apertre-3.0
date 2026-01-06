@@ -123,7 +123,7 @@ async def _load_model_with_retry() -> bool:
     return await _load_model_impl()
 
 
-def load_model() -> bool:
+async def load_model() -> bool:
     """
     Load the anomaly detection model with retry + circuit breaker protection.
 
@@ -138,19 +138,10 @@ def load_model() -> bool:
     global _MODEL, _MODEL_LOADED, _USING_HEURISTIC_MODE
 
     try:
-        # Use asyncio event loop if available, else create one
-        try:
-            loop = asyncio.get_event_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-
         # Call through retry (handles transient) then circuit breaker (handles cascading)
-        result = loop.run_until_complete(
-            _model_loader_cb.call(
-                _load_model_with_retry,  # Retry wrapper
-                fallback=_load_model_fallback,
-            )
+        result = await _model_loader_cb.call(
+            _load_model_with_retry,  # Retry wrapper
+            fallback=_load_model_fallback,
         )
         return result
 
@@ -204,7 +195,7 @@ def _detect_anomaly_heuristic(data: Dict) -> Tuple[bool, float]:
     return is_anomalous, min(score, 1.0)  # Cap at 1.0
 
 
-def detect_anomaly(data: Dict) -> Tuple[bool, float]:
+async def detect_anomaly(data: Dict) -> Tuple[bool, float]:
     """
     Detect anomaly in telemetry data with circuit breaker protection.
 
@@ -231,7 +222,7 @@ def detect_anomaly(data: Dict) -> Tuple[bool, float]:
 
         # Ensure model is loaded once
         if not _MODEL_LOADED:
-            load_model()
+            await load_model()
 
         # Validate input
         if not isinstance(data, dict):

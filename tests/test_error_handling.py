@@ -191,32 +191,35 @@ class TestAnomalyDetectorErrorHandling:
         monitor = SystemHealthMonitor()
         monitor.reset()
     
-    def test_anomaly_detector_fallback_on_invalid_input(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detector_fallback_on_invalid_input(self):
         """Test anomaly detector falls back on invalid input."""
-        is_anomalous, score = detect_anomaly(None)  # Invalid input
+        is_anomalous, score = await detect_anomaly(None)  # Invalid input
         
         # Should return a safe default, not crash
         assert isinstance(is_anomalous, bool)
         assert 0 <= score <= 1
     
-    def test_anomaly_detector_heuristic_mode(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detector_heuristic_mode(self):
         """Test anomaly detector heuristic fallback."""
         data = {
             "voltage": 6.5,  # Below threshold
             "temperature": 25.0,
             "gyro": 0.01
         }
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
         assert 0 <= score <= 1
     
-    def test_anomaly_detector_health_tracking(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detector_health_tracking(self):
         """Test anomaly detector health status updates."""
         monitor = SystemHealthMonitor()
         
-        detect_anomaly({"voltage": 8.0, "temperature": 25.0, "gyro": 0.01})
+        await detect_anomaly({"voltage": 8.0, "temperature": 25.0, "gyro": 0.01})
         
         health = monitor.get_component_health("anomaly_detector")
         assert health is not None
@@ -324,13 +327,14 @@ class TestErrorHandlingIntegration:
         assert status["component_counts"]["degraded"] == 2
         assert status["component_counts"]["healthy"] == 1
     
-    def test_full_pipeline_with_error_handling(self):
+    @pytest.mark.asyncio
+    async def test_full_pipeline_with_error_handling(self):
         """Test complete pipeline with error handling."""
         monitor = SystemHealthMonitor()
         
         # Simulate telemetry processing
         data = {"voltage": 8.0, "temperature": 25.0, "gyro": 0.01}
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         # Verify anomaly detector registered and healthy
         assert monitor.get_component_health("anomaly_detector") is not None

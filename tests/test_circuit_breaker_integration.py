@@ -31,38 +31,42 @@ class TestAnomalyDetectorCircuitBreaker:
         assert _model_loader_cb.is_closed
         assert _model_loader_cb.failure_threshold == 5
     
-    def test_successful_model_load(self):
+    @pytest.mark.asyncio
+    async def test_successful_model_load(self):
         """Successful model load keeps circuit closed"""
         with patch('anomaly.anomaly_detector.os.path.exists', return_value=True):
             with patch('builtins.open', MagicMock()):
                 with patch('pickle.load', return_value=MagicMock()):
-                    result = load_model()
+                    result = await load_model()
         
         # Should succeed (or fail gracefully if pickle mocking incomplete)
         assert _model_loader_cb.is_closed
     
-    def test_circuit_breaker_opens_on_repeated_failures(self):
+    @pytest.mark.asyncio
+    async def test_circuit_breaker_opens_on_repeated_failures(self):
         """Circuit breaker opens after failure threshold"""
         # Simulate repeated model load failures
         with patch('anomaly.anomaly_detector.os.path.exists', return_value=False):
             # Try to load model 5 times (failure threshold)
             for i in range(5):
-                result = load_model()
+                result = await load_model()
                 # Each attempt should fail gracefully
                 assert result is False or result is True  # Returns bool
         
         # After 5 failures, circuit should be open or degraded
         # (actual state depends on asyncio event loop behavior)
     
-    def test_model_not_found_fallback(self):
+    @pytest.mark.asyncio
+    async def test_model_not_found_fallback(self):
         """Model not found triggers heuristic fallback"""
         with patch('anomaly.anomaly_detector.os.path.exists', return_value=False):
-            result = load_model()
+            result = await load_model()
         
         # Should return False (heuristic mode)
         assert result is False
     
-    def test_anomaly_detection_with_heuristic_fallback(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_with_heuristic_fallback(self):
         """Anomaly detection works with heuristic fallback"""
         test_data = {
             "voltage": 8.0,
@@ -71,33 +75,35 @@ class TestAnomalyDetectorCircuitBreaker:
             "gyro": 0.01
         }
         
-        is_anomaly, score = detect_anomaly(test_data)
+        is_anomaly, score = await detect_anomaly(test_data)
         
         # Should return valid result
         assert isinstance(is_anomaly, bool)
         assert isinstance(score, float)
         assert 0 <= score <= 1
     
-    def test_anomaly_detection_with_invalid_input(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_with_invalid_input(self):
         """Anomaly detection handles invalid input gracefully"""
         # Test with None
-        is_anomaly, score = detect_anomaly(None)
+        is_anomaly, score = await detect_anomaly(None)
         assert isinstance(is_anomaly, bool)
         assert isinstance(score, float)
         
         # Test with empty dict
-        is_anomaly, score = detect_anomaly({})
+        is_anomaly, score = await detect_anomaly({})
         assert isinstance(is_anomaly, bool)
         assert isinstance(score, float)
     
-    def test_anomaly_detection_latency_tracking(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_latency_tracking(self):
         """Verify latency metrics are recorded"""
         from core.metrics import ANOMALY_DETECTION_LATENCY
         
         test_data = {"voltage": 8.0, "temperature": 25.0, "current": 0.5, "gyro": 0.01}
         
         # Call detect_anomaly
-        is_anomaly, score = detect_anomaly(test_data)
+        is_anomaly, score = await detect_anomaly(test_data)
         
         # Metrics should be recorded (verify by checking counter exists)
         assert ANOMALY_DETECTION_LATENCY is not None
@@ -134,13 +140,13 @@ class TestAnomalyDetectorRecovery:
         # Force circuit to open by triggering failures
         with patch('anomaly.anomaly_detector.os.path.exists', return_value=False):
             for _ in range(5):
-                load_model()
+                await load_model()
         
         # Wait for recovery timeout
         await asyncio.sleep(1)
         
         # Try again - might transition to HALF_OPEN
-        result = load_model()
+        result = await load_model()
         
         # Should attempt recovery
         assert result is not None
@@ -157,7 +163,8 @@ class TestAnomalyDetectorRecovery:
 class TestAnomalyDetectorMetrics:
     """Test metrics collection during anomaly detection"""
     
-    def test_anomaly_detection_counter(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_counter(self):
         """Verify anomaly detection counter increments"""
         from core.metrics import ANOMALY_DETECTIONS_TOTAL
         
@@ -165,29 +172,31 @@ class TestAnomalyDetectorMetrics:
         
         # Call detect_anomaly multiple times
         for _ in range(3):
-            detect_anomaly(test_data)
+            await detect_anomaly(test_data)
         
         # Counter should exist and be accessible
         assert ANOMALY_DETECTIONS_TOTAL is not None
     
-    def test_fallback_activation_tracking(self):
+    @pytest.mark.asyncio
+    async def test_fallback_activation_tracking(self):
         """Track fallback activations"""
         from core.metrics import ANOMALY_MODEL_FALLBACK_ACTIVATIONS
         
         test_data = {"voltage": 8.0, "temperature": 25.0, "current": 0.5, "gyro": 0.01}
         
         # Force fallback by using heuristic
-        is_anomaly, score = detect_anomaly(test_data)
+        is_anomaly, score = await detect_anomaly(test_data)
         
         assert ANOMALY_MODEL_FALLBACK_ACTIVATIONS is not None
     
-    def test_model_load_error_tracking(self):
+    @pytest.mark.asyncio
+    async def test_model_load_error_tracking(self):
         """Track model load errors"""
         from core.metrics import ANOMALY_MODEL_LOAD_ERRORS_TOTAL
         
         # Trigger model load error
         with patch('anomaly.anomaly_detector.os.path.exists', return_value=False):
-            load_model()
+            await load_model()
         
         assert ANOMALY_MODEL_LOAD_ERRORS_TOTAL is not None
 
@@ -195,14 +204,15 @@ class TestAnomalyDetectorMetrics:
 class TestAnomalyDetectorEdgeCases:
     """Test edge cases in anomaly detector with circuit breaker"""
     
-    def test_concurrent_detections(self):
+    @pytest.mark.asyncio
+    async def test_concurrent_detections(self):
         """Handle concurrent anomaly detections"""
         test_data = {"voltage": 8.0, "temperature": 25.0, "current": 0.5, "gyro": 0.01}
         
         # Call detect_anomaly multiple times
         results = []
         for _ in range(5):
-            is_anomaly, score = detect_anomaly(test_data)
+            is_anomaly, score = await detect_anomaly(test_data)
             results.append((is_anomaly, score))
         
         # All should succeed
@@ -211,7 +221,8 @@ class TestAnomalyDetectorEdgeCases:
             assert isinstance(is_anomaly, bool)
             assert 0 <= score <= 1
     
-    def test_special_float_values(self):
+    @pytest.mark.asyncio
+    async def test_special_float_values(self):
         """Handle special float values (inf, nan)"""
         test_cases = [
             {"voltage": float('inf'), "temperature": 25.0, "current": 0.5, "gyro": 0.01},
@@ -220,15 +231,16 @@ class TestAnomalyDetectorEdgeCases:
         ]
         
         for test_data in test_cases:
-            is_anomaly, score = detect_anomaly(test_data)
+            is_anomaly, score = await detect_anomaly(test_data)
             assert isinstance(is_anomaly, bool)
             assert isinstance(score, float)
     
-    def test_missing_telemetry_fields(self):
+    @pytest.mark.asyncio
+    async def test_missing_telemetry_fields(self):
         """Handle missing telemetry fields"""
         incomplete_data = {"voltage": 8.0}  # Missing other fields
         
-        is_anomaly, score = detect_anomaly(incomplete_data)
+        is_anomaly, score = await detect_anomaly(incomplete_data)
         
         assert isinstance(is_anomaly, bool)
         assert isinstance(score, float)

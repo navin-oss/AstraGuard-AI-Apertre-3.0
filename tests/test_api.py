@@ -14,6 +14,14 @@ def setup_components():
     initialize_components()
 
 
+@pytest.fixture(autouse=True)
+def mock_psutil(monkeypatch):
+    """Mock psutil to prevent blocking calls during tests."""
+    monkeypatch.setattr("psutil.cpu_percent", lambda interval=None: 0.0)
+    monkeypatch.setattr("psutil.virtual_memory", lambda: type('obj', (object,), {'percent': 50.0, 'available': 1024*1024*1024})())
+
+
+
 @pytest.fixture
 def client():
     """Create test client."""

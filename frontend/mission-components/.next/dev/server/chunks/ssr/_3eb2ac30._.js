@@ -47,8 +47,6 @@ module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/serve
 "[project]/node_modules/geist/dist/geistsans_d5a4f12f.module.css [app-rsc] (css module)", ((__turbopack_context__) => {
 
 __turbopack_context__.v({
-  "className": "geistsans_d5a4f12f-module__Ur3q_a__className",
-  "variable": "geistsans_d5a4f12f-module__Ur3q_a__variable",
 });
 }),
 "[project]/node_modules/geist/dist/geistsans_d5a4f12f.js [app-rsc] (ecmascript)", ((__turbopack_context__) => {
@@ -91,8 +89,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$geist$2f$dis
 "[project]/node_modules/geist/dist/geistmono_157ca88a.module.css [app-rsc] (css module)", ((__turbopack_context__) => {
 
 __turbopack_context__.v({
-  "className": "geistmono_157ca88a-module__iaM1Ya__className",
-  "variable": "geistmono_157ca88a-module__iaM1Ya__variable",
 });
 }),
 "[project]/node_modules/geist/dist/geistmono_157ca88a.js [app-rsc] (ecmascript)", ((__turbopack_context__) => {

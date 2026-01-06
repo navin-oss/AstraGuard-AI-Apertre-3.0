@@ -192,7 +192,8 @@ class TestErrorContextManager:
 class TestAnomalyDetectorGracefulDegradation:
     """Test anomaly detector graceful degradation."""
     
-    def test_anomaly_detection_with_valid_data(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_with_valid_data(self):
         """Test anomaly detection returns valid result."""
         data = {
             "voltage": 8.0,
@@ -200,26 +201,28 @@ class TestAnomalyDetectorGracefulDegradation:
             "gyro": 0.01
         }
         
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
         assert 0 <= score <= 1
     
-    def test_anomaly_detection_with_missing_fields(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_with_missing_fields(self):
         """Test anomaly detection handles missing fields."""
         data = {"voltage": 8.0}  # Missing temperature and gyro
         
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
     
-    def test_anomaly_detection_with_invalid_data_type(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_with_invalid_data_type(self):
         """Test anomaly detection handles invalid data type gracefully."""
         # Invalid data type should be caught and fallback used
         # Returns safe default (no anomaly) instead of raising
-        is_anomalous, score = detect_anomaly("not a dict")
+        is_anomalous, score = await detect_anomaly("not a dict")
         
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
@@ -300,28 +303,30 @@ class TestPolicyEngineErrorHandling:
 class TestCascadingFailureProtection:
     """Test that failures don't cascade through the system."""
     
-    def test_anomaly_detection_failure_doesnt_break_state_machine(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_failure_doesnt_break_state_machine(self):
         """Test that anomaly detection failures don't break state machine."""
         sm = StateMachine()
         initial_phase = sm.get_current_phase()
         
         # Try to process data with anomaly detector in degraded mode
         data = {"voltage": 8.0, "temperature": 25.0, "gyro": 0.01}
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         # State machine should be unaffected
         assert sm.get_current_phase() == initial_phase
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
     
-    def test_policy_evaluation_failure_doesnt_break_detector(self):
+    @pytest.mark.asyncio
+    async def test_policy_evaluation_failure_doesnt_break_detector(self):
         """Test that policy evaluation failures don't break detector."""
         loader = MissionPhasePolicyLoader()
         engine = MissionPhasePolicyEngine(loader.get_policy())
         
         # Anomaly detection should work independent of policy
         data = {"voltage": 7.5, "temperature": 30.0, "gyro": 0.02}
-        is_anomalous, score = detect_anomaly(data)
+        is_anomalous, score = await detect_anomaly(data)
         
         assert isinstance(is_anomalous, bool)
         assert isinstance(score, float)
@@ -345,22 +350,23 @@ class TestErrorRecovery:
         # Should still be in initial phase
         assert sm.get_current_phase() == initial_phase
     
-    def test_anomaly_detector_recovers_after_error(self):
+    @pytest.mark.asyncio
+    async def test_anomaly_detector_recovers_after_error(self):
         """Test anomaly detector can recover from errors."""
         # First call with valid data
         data1 = {"voltage": 8.0, "temperature": 25.0, "gyro": 0.01}
-        is_anomalous1, score1 = detect_anomaly(data1)
+        is_anomalous1, score1 = await detect_anomaly(data1)
         assert isinstance(is_anomalous1, bool)
         
         # Call with problematic data should be handled
         try:
-            is_anomalous2, score2 = detect_anomaly({"invalid": "data"})
+            is_anomalous2, score2 = await detect_anomaly({"invalid": "data"})
         except:
             pass  # May raise, should be handled
         
         # Third call should still work
         data3 = {"voltage": 7.9, "temperature": 26.0, "gyro": 0.02}
-        is_anomalous3, score3 = detect_anomaly(data3)
+        is_anomalous3, score3 = await detect_anomaly(data3)
         assert isinstance(is_anomalous3, bool)
 
 

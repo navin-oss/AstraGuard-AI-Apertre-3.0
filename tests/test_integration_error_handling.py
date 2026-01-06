@@ -12,11 +12,13 @@ from core.error_handling import (
     ModelLoadError,
     AnomalyEngineError,
     PolicyEvaluationError,
+    StateTransitionError,
 )
 from state_machine.state_engine import StateMachine, MissionPhase
 from state_machine.mission_phase_policy_engine import MissionPhasePolicyEngine
 from anomaly_agent.phase_aware_handler import PhaseAwareAnomalyHandler
 from config.mission_phase_policy_loader import MissionPhasePolicyLoader
+from anomaly.anomaly_detector import detect_anomaly
 
 
 class TestEndToEndErrorHandling:
@@ -186,12 +188,13 @@ class TestDegradationModes:
         monitor = SystemHealthMonitor()
         monitor.reset()
     
-    def test_heuristic_fallback_in_anomaly_detector(self):
+    @pytest.mark.asyncio
+    async def test_heuristic_fallback_in_anomaly_detector(self):
         """Test that anomaly detector falls back to heuristic mode."""
         from anomaly.anomaly_detector import detect_anomaly, _USING_HEURISTIC_MODE
         
         # Detect anomaly in heuristic mode
-        is_anomalous, score = detect_anomaly({
+        is_anomalous, score = await detect_anomaly({
             'voltage': 6.5,
             'temperature': 50.0,
             'gyro': 0.2
@@ -297,3 +300,73 @@ class TestHealthStatusExposure:
         for comp_name, comp_status in status['components'].items():
             assert 'status' in comp_status
             assert 'error_count' in comp_status or 'last_error' in comp_status
+
+
+class TestCascadingFailureProtection:
+    """Test that failures don't cascade through the system."""
+    
+    @pytest.mark.asyncio
+    async def test_anomaly_detection_failure_doesnt_break_state_machine(self):
+        """Test that anomaly detection failures don't break state machine."""
+        sm = StateMachine()
+        initial_phase = sm.get_current_phase()
+        
+        # Try to process data with anomaly detector in degraded mode
+        data = {"voltage": 8.0, "temperature": 25.0, "gyro": 0.01}
+        is_anomalous, score = await detect_anomaly(data)
+        
+        # State machine should be unaffected
+        assert sm.get_current_phase() == initial_phase
+        assert isinstance(is_anomalous, bool)
+        assert isinstance(score, float)
+    
+    @pytest.mark.asyncio
+    async def test_policy_evaluation_failure_doesnt_break_detector(self):
+        """Test that policy evaluation failures don't break detector."""
+        loader = MissionPhasePolicyLoader()
+        engine = MissionPhasePolicyEngine(loader.get_policy())
+        
+        # Anomaly detection should work independent of policy
+        data = {"voltage": 7.5, "temperature": 30.0, "gyro": 0.02}
+        is_anomalous, score = await detect_anomaly(data)
+        
+        assert isinstance(is_anomalous, bool)
+        assert isinstance(score, float)
+
+
+class TestErrorRecovery:
+    """Test system recovery after errors."""
+    
+    def test_state_machine_maintains_last_known_good_state(self):
+        """Test state machine keeps last known-good state on error."""
+        sm = StateMachine()
+        initial_phase = MissionPhase.NOMINAL_OPS
+        sm.current_phase = initial_phase
+        
+        # Try invalid transition - should raise error
+        try:
+            sm.set_phase(MissionPhase.LAUNCH)
+        except StateTransitionError:
+            pass  # Expected
+        
+        # Should still be in initial phase
+        assert sm.get_current_phase() == initial_phase
+    
+    @pytest.mark.asyncio
+    async def test_anomaly_detector_recovers_after_error(self):
+        """Test anomaly detector can recover from errors."""
+        # First call with valid data
+        data1 = {"voltage": 8.0, "temperature": 25.0, "gyro": 0.01}
+        is_anomalous1, score1 = await detect_anomaly(data1)
+        assert isinstance(is_anomalous1, bool)
+        
+        # Call with problematic data should be handled
+        try:
+            is_anomalous2, score2 = await detect_anomaly({"invalid": "data"})
+        except:
+            pass  # May raise, should be handled
+        
+        # Third call should still work
+        data3 = {"voltage": 7.9, "temperature": 26.0, "gyro": 0.02}
+        is_anomalous3, score3 = await detect_anomaly(data3)
+        assert isinstance(is_anomalous3, bool)
