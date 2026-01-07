@@ -13,7 +13,7 @@ export const ChaosPanel: React.FC<ChaosPanelProps> = ({ className = "" }) => {
 
     const fetchStatus = async () => {
         try {
-            const res = await fetch('http://localhost:8001/api/v1/chaos/status');
+            const res = await fetch('http://localhost:8002/api/v1/chaos/status');
             if (res.ok) {
                 const data = await res.json();
                 setActiveFaults(data.details || {});
@@ -32,7 +32,7 @@ export const ChaosPanel: React.FC<ChaosPanelProps> = ({ className = "" }) => {
     const injectFault = async (faultType: string, duration: number) => {
         setLoading(faultType);
         try {
-            await fetch('http://localhost:8001/api/v1/chaos/inject', {
+            await fetch('http://localhost:8002/api/v1/chaos/inject', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ fault_type: faultType, duration_seconds: duration })

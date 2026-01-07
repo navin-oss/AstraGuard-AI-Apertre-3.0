@@ -166,3 +166,717 @@
 [00:08:09.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
 [00:08:09.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
 [00:08:09.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:45.339] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:45.706] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:45.706] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:46.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:46.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:46.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:48.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:48.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:48.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:50.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:50.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:50.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:52.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:52.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:52.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:54.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:54.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:54.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:56.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:56.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:56.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:09:58.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:09:58.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:09:58.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:00.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:00.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:00.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:04.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:04.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:04.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:06.442] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:06.442] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:06.442] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:08.432] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:08.432] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:08.432] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:10.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:10.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:10.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:12.449] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:12.449] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:12.449] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:14.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:14.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:14.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:16.447] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:16.447] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:16.447] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:18.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:18.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:18.433] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:20.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:20.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:20.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:22.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:22.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:22.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:24.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:24.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:24.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:26.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:26.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:26.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:28.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:28.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:28.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:30.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:30.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:30.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:32.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:32.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:32.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:34.448] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:34.448] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:34.448] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:36.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:36.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:36.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:38.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:38.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:38.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:40.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:40.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:40.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:42.437] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:42.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:42.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:44.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:44.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:44.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:46.436] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:46.436] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:46.436] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:48.465] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:48.465] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:48.465] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:49.367] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.367] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:49.368] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:10:50.471] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:50.471] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:50.471] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:50.471] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:50.471] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: POST http://localhost:8001/api/v1/chaos/inject {"body":"{\"fault_type\":\"network_latency\",\"duration_seconds\":10}","headers":{"Content-Type":"application/json"},"method":"POST"}
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:52.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:53.429] Browser DEBUG   [Recorder] Fetch request: POST http://localhost:8001/api/v1/chaos/inject {"body":"{\"fault_type\":\"model_loader\",\"duration_seconds\":15}","headers":{"Content-Type":"application/json"},"method":"POST"}
+[00:10:53.429] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:54.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:54.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:54.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:54.479] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:55.000] Browser DEBUG   [Recorder] Fetch request: POST http://localhost:8001/api/v1/chaos/inject {"body":"{\"fault_type\":\"redis_failure\",\"duration_seconds\":20}","headers":{"Content-Type":"application/json"},"method":"POST"}
+[00:10:55.000] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:56.897] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:56.897] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:56.897] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:10:56.897] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:10:58.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:10:58.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:10:58.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:00.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:00.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:00.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:02.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:04.435] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:04.435] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:04.435] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:06.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:06.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:06.440] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:08.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:08.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:08.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:10.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:10.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:10.444] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:12.423] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:12.945] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:12.945] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:14.431] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:14.431] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:14.431] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:16.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:16.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:16.439] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:18.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:18.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:18.438] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:21.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:21.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:21.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:23.380] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:23.381] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:23.381] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:25.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:25.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:25.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:27.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:27.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:27.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:29.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:29.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:29.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:31.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:31.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:31.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:33.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:33.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:33.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:35.365] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:35.365] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:35.365] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:37.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:37.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:37.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:39.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:39.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:39.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:41.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:41.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:41.368] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:43.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:43.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:43.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:45.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:45.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:45.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:47.381] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:47.381] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:47.381] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:49.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:49.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:49.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:51.385] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:51.385] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:51.385] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:53.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:53.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:53.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:55.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:55.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:55.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:57.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:57.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:57.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:11:59.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:11:59.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:11:59.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:01.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:01.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:01.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:02.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:02.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:02.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:04.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:04.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:04.457] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:06.437] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:06.437] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:06.437] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:08.424] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:09.190] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:09.190] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:10.450] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:10.450] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:10.450] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:12.443] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:12:12.443] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:12:12.443] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:12:13.221] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/enter-ai color: rgb(120, 120, 120) color: inherit {"dp":"/enter-ai","o":"http://localhost:3000/enter-ai","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812299569}
+[00:12:16.156] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:16.425] Browser WARN    Please ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.
+[00:12:16.425] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:16.425] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:12:16.425] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812302796}
+[00:12:21.472] Server  LOG      ○ Compiling /experience ...
+[00:12:22.180] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:22.314] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:22.314] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/experience","route":"/experience"}
+[00:12:22.314] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/experience color: rgb(120, 120, 120) color: inherit {"dp":"/experience","o":"http://localhost:3000/experience","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812308663}
+[00:12:22.703] Browser LOG     WebGL version: WebGL 2.0 (OpenGL ES 3.0 Chromium)
+[00:12:22.703] Browser LOG     WebGL version: WebGL 2.0 (OpenGL ES 3.0 Chromium)
+[00:12:23.186] Browser DEBUG   Loading progress: 0% (0/37)
+[00:12:23.186] Browser DEBUG   Start preloading assets...
+[00:12:23.186] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:3000/assets/models/galaxy.glb undefined
+[00:12:23.186] Browser DEBUG   Model loaded: 0
+[00:12:23.186] Browser DEBUG   Loading progress: 3% (1/37)
+[00:12:23.186] Browser DEBUG   Texture loaded: /assets/img/discs/disc.png
+[00:12:23.186] Browser DEBUG   Texture loaded: /assets/img/discs/disc.png
+[00:12:23.186] Browser DEBUG   Loading progress: 8% (3/37)
+[00:12:23.186] Browser DEBUG   Texture loaded: /assets/img/other/smoke.png
+[00:12:23.186] Browser DEBUG   Texture loaded: /assets/img/planets/sun.jpg
+[00:12:23.186] Browser DEBUG   Loading progress: 14% (5/37)
+[00:12:23.186] Browser DEBUG   Texture loaded: /assets/img/planets/mercury.jpg
+[00:12:23.186] Browser DEBUG   Loading progress: 16% (6/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/earthnight.jpg
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/venus.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 22% (8/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/earth.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 24% (9/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/mars.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 27% (10/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/jupiter.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 30% (11/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/saturn.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 32% (12/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/saturnring.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 35% (13/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/earthclouds.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 38% (14/37)
+[00:12:23.187] Browser DEBUG   Texture loaded: /assets/img/planets/uranus.jpg
+[00:12:23.187] Browser DEBUG   Loading progress: 41% (15/37)
+[00:12:23.188] Browser DEBUG   Texture loaded: /assets/img/planets/uranusring.jpg
+[00:12:23.188] Browser DEBUG   Texture loaded: /assets/img/planets/neptune.jpg
+[00:12:23.188] Browser DEBUG   Loading progress: 46% (17/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/galaxy.png
+[00:12:23.188] Browser DEBUG   Texture loaded: /assets/img/continent/continent.jpg
+[00:12:23.188] Browser DEBUG   Loading progress: 49% (18/37)
+[00:12:23.188] Browser DEBUG   Loading progress: 51% (19/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/space.png
+[00:12:23.188] Browser DEBUG   Texture loaded: /assets/img/city/city.jpg
+[00:12:23.188] Browser DEBUG   Loading progress: 57% (21/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/solarsystem.png
+[00:12:23.188] Browser DEBUG   Loading progress: 59% (22/37)
+[00:12:23.188] Browser DEBUG   Texture loaded: /assets/img/district/district.jpg
+[00:12:23.188] Browser DEBUG   Loading progress: 62% (23/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/continent.png
+[00:12:23.188] Browser DEBUG   Loading progress: 65% (24/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/earth.png
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/city.png
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/district.png
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/earthapproach.png
+[00:12:23.188] Browser DEBUG   Loading progress: 76% (28/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/pin.png
+[00:12:23.188] Browser DEBUG   Loading progress: 78% (29/37)
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/astronaut.png
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/superhero.png
+[00:12:23.188] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/human.png
+[00:12:23.188] Browser DEBUG   All icons loaded.
+[00:12:23.188] Browser DEBUG   Assets preloading complete.
+[00:12:23.188] Browser DEBUG   Loading progress: 81% (30/37)
+[00:12:23.188] Browser DEBUG   Loading progress: 86% (32/37)
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: galaxy -> solarSystemApproach
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: solarSystemApproach -> solarSystemRotation
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: solarSystemRotation -> earthApproach
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: earthApproach -> earth
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: earth -> continent
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: continent -> city
+[00:12:27.022] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:27.022] Browser DEBUG   [SceneManager] Extracting to next scene: city -> district
+[00:12:29.676] Browser DEBUG   Animation complete - zoomed out from district
+[00:12:32.102] Browser DEBUG   Animation complete - zoomed out from city
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:34.970] Browser DEBUG   Animation complete - zoomed out from continent
+[00:12:38.319] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:38.436] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:38.436] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/experience","route":"/experience"}
+[00:12:38.436] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/experience color: rgb(120, 120, 120) color: inherit {"dp":"/experience","o":"http://localhost:3000/experience","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812324807}
+[00:12:38.896] Browser LOG     WebGL version: WebGL 2.0 (OpenGL ES 3.0 Chromium)
+[00:12:38.896] Browser LOG     WebGL version: WebGL 2.0 (OpenGL ES 3.0 Chromium)
+[00:12:38.896] Browser DEBUG   Loading progress: 0% (0/37)
+[00:12:38.896] Browser DEBUG   Start preloading assets...
+[00:12:38.896] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:3000/assets/models/galaxy.glb undefined
+[00:12:38.896] Browser DEBUG   Model loaded: 0
+[00:12:38.896] Browser DEBUG   Loading progress: 3% (1/37)
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/discs/disc.png
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/discs/disc.png
+[00:12:38.896] Browser DEBUG   Loading progress: 8% (3/37)
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/other/smoke.png
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/sun.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/mercury.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/venus.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/mars.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/jupiter.jpg
+[00:12:38.896] Browser DEBUG   Loading progress: 24% (9/37)
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/planets/saturn.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/continent/continent.jpg
+[00:12:38.896] Browser DEBUG   Texture loaded: /assets/img/city/city.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/district/district.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/earth.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/earthnight.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/earthclouds.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/saturnring.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/uranus.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/uranusring.jpg
+[00:12:38.897] Browser DEBUG   Texture loaded: /assets/img/planets/neptune.jpg
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/galaxy.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/space.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/solarsystem.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/earthapproach.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/earth.png
+[00:12:38.897] Browser DEBUG   Loading progress: 68% (25/37)
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/continent.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/city.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/district.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/pin.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/astronaut.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/superhero.png
+[00:12:38.897] Browser DEBUG   Icon loaded: /assets/icons/zoom_progress_indicator/human.png
+[00:12:38.897] Browser DEBUG   All icons loaded.
+[00:12:38.897] Browser DEBUG   Assets preloading complete.
+[00:12:38.897] Browser DEBUG   Loading progress: 86% (32/37)
+[00:12:43.318] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:43.318] Browser DEBUG   [SceneManager] Extracting to next scene: galaxy -> solarSystemApproach
+[00:12:43.318] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:43.318] Browser DEBUG   [SceneManager] Extracting to next scene: solarSystemApproach -> solarSystemRotation
+[00:12:43.567] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:43.567] Browser DEBUG   [SceneManager] Extracting to next scene: solarSystemRotation -> earthApproach
+[00:12:43.567] Browser DEBUG   Animation complete - zoomed in from galaxy
+[00:12:43.567] Browser DEBUG   [SceneManager] Extracting to next scene: earthApproach -> earth
+[00:12:45.299] Browser DEBUG   Animation complete - zoomed out from earth
+[00:12:46.393] Browser DEBUG   [Earth] Starting Earth Approach Animation
+[00:12:47.874] Browser DEBUG   Animation complete - zoomed out from earthApproach
+[00:12:49.761] Browser DEBUG   Animation complete - zoomed out from solarSystemRotation
+[00:12:51.220] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:51.431] Browser WARN    Please ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.
+[00:12:51.562] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:51.562] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:12:51.562] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812337932}
+[00:13:08.327] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:08.457] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:13:08.457] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/enter-ai","route":"/enter-ai"}
+[00:13:08.457] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/enter-ai color: rgb(120, 120, 120) color: inherit {"dp":"/enter-ai","o":"http://localhost:3000/enter-ai","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812354821}
+[00:13:10.616] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:3000/dashboard?_rsc=of89a {"credentials":"same-origin","headers":{"next-router-state-tree":"%5B%22%22%2C%7B%22children%22%3A%5B%22enter-ai%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D","next-url":"/enter-ai","rsc":"1","x-nextjs-html-request-id":"18i9G7A1mFJ2asOS16St0","x-nextjs-request-id":"e1c420bf"},"priority":"auto"}
+[00:13:10.819] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:10.819] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:10.819] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/dashboard","o":"http://localhost:3000/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812357179}
+[00:13:11.165] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:11.165] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:11.165] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:11.165] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:12.838] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:12.838] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:12.838] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:14.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:14.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:14.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:16.811] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.221] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:13:17.545] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:17.545] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:18.962] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:18.962] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:18.962] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:20.881] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:20.881] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:20.881] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:22.846] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:22.846] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:22.846] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:24.834] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:24.834] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:24.834] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:26.856] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:26.856] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:26.856] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:28.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:28.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:28.830] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:30.823] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:30.823] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:30.823] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:30.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:30.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:32.808] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:32.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:32.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:32.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:33.323] Browser DEBUG   [Recorder] Fetch request: POST http://localhost:8001/api/v1/chaos/inject {"body":"{\"fault_type\":\"redis_failure\",\"duration_seconds\":20}","headers":{"Content-Type":"application/json"},"method":"POST"}
+[00:13:33.323] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:34.835] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:34.835] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:34.835] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:34.955] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:36.829] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:36.829] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:36.829] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:36.954] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:37.253] Browser DEBUG   [Recorder] Fetch request: POST http://localhost:8001/api/v1/chaos/inject {"body":"{\"fault_type\":\"network_latency\",\"duration_seconds\":10}","headers":{"Content-Type":"application/json"},"method":"POST"}
+[00:13:37.253] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/chaos/status undefined
+[00:13:39.037] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:39.175] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:39.175] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:40.839] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:40.839] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:40.839] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:44.380] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:44.380] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:44.380] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:46.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:46.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:46.446] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:48.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:48.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:48.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:50.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:50.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:50.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:52.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:52.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:52.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:54.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:54.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:54.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:56.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:56.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:56.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:13:58.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:13:58.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:13:58.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:00.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:00.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:00.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:02.363] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:02.363] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:02.363] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:04.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:04.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:04.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:06.343] Server  LOG      ✓ Compiled in 247ms
+[00:14:06.527] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:06.527] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:06.527] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:08.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:08.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:08.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:10.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:10.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:10.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:12.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:12.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:12.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:14.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:14.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:14.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:16.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:16.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:16.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:18.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:18.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:18.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:20.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:20.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:20.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:22.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:22.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:22.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:22.609] Server  LOG      ✓ Compiled in 87ms
+[00:14:24.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:24.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:24.379] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:24.914] Server  LOG      ✓ Compiled in 171ms
+[00:14:26.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:26.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:26.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:26.529] Server  LOG      ✓ Compiled in 82ms
+[00:14:27.954] Server  LOG      ✓ Compiled in 66ms
+[00:14:28.382] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:28.382] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:28.382] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:30.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:30.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:30.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:32.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:32.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:32.378] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:34.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:34.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:34.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:36.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:36.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:36.366] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:38.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:38.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:38.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:40.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:40.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:40.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:42.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:42.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:42.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:46.590] Server  LOG      ✓ Compiled in 86ms
+[00:14:48.168] Server  LOG      ✓ Compiled in 90ms
+[00:14:50.505] Server  LOG      ✓ Compiled in 111ms
+[00:14:52.092] Server  LOG      ✓ Compiled in 226ms
+[00:14:53.182] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:55.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:55.369] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:14:55.369] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/dashboard","route":"/dashboard"}
+[00:14:55.369] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/dashboard color: rgb(120, 120, 120) color: inherit {"dp":"/dashboard","o":"http://localhost:3000/dashboard","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1767812459907}
+[00:14:55.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:55.369] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:57.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:57.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:57.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:14:59.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:14:59.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:14:59.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:15:01.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:15:01.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:15:01.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:15:03.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:15:03.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:15:03.370] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:15:05.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:15:05.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:15:05.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:15:07.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:15:07.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:15:07.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:15:09.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:15:09.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:15:09.371] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:16:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/status undefined
+[00:16:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/telemetry/latest undefined
+[00:16:09.374] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8001/api/v1/history/anomalies?limit=10 undefined
+[00:16:24.688] Server  LOG      ✓ Compiled in 70ms
+[00:16:35.754] Server  LOG      ✓ Compiled in 77ms
+[00:16:37.944] Server  LOG      ✓ Compiled in 92ms
+[00:16:38.400] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:41.373] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:41.373] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:41.373] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:43.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:43.372] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:45.372] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:45.372] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:47.375] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:47.375] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:48.693] Server  LOG      ✓ Compiled in 53ms
+[00:16:49.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:49.376] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:16:51.376] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:16:51.376] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:17:11.367] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:17:11.367] Browser WARN    [Polling] Failed to fetch backend data - using mockup {}
+[00:18:09.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/status undefined
+[00:18:09.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/telemetry/latest undefined
+[00:18:09.377] Browser DEBUG   [Recorder] Fetch request: GET http://localhost:8002/api/v1/history/anomalies?limit=10 undefined

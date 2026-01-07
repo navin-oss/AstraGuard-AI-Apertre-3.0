@@ -653,7 +653,57 @@ async def inject_fault(request: ChaosRequest):
     return {"status": "injected", "fault": request.fault_type, "expires_at": expiration}
 
 
+
+class AnalysisRequest(BaseModel):
+    anomaly_id: str
+    context: dict = {}
+
+class AnalysisResponse(BaseModel):
+    anomaly_id: str
+    analysis: str
+    recommendation: str
+    confidence: float
+
+@app.post("/api/v1/analysis/investigate", response_model=AnalysisResponse)
+async def investigate_anomaly(request: AnalysisRequest):
+    """
+    AI-powered anomaly investigation (Mocked for MVP).
+    Analyzes telemetry context to provide explanations and recommendations.
+    """
+    # Simulate processing delay (AI thinking)
+    time.sleep(1.5)
+    
+    context = request.context
+    metric = context.get('metric', 'Unknown')
+    value = context.get('value', 'N/A')
+    
+    # Heuristic-based "Generative" responses
+    if "Temp" in metric:
+        analysis = f"Thermal analysis indicates a rapid temperature excursion to {value}. This pattern is consistent with obstructed radiator flow or sensor bias drift."
+        recommendation = "1. Verify radiator louver positions. \n2. Check thermal sensor redundancy. \n3. Initiate cooling cycle if temp > 85°C."
+        confidence = 0.92
+    elif "Voltage" in metric or "Current" in metric:
+        analysis = f"Power subsystem detected instability ({value}). The fluctuations suggest a potential short-circuit on the secondary bus or battery cell degradation."
+        recommendation = "1. Isolate non-essential loads. \n2. Switch to backup battery logic. \n3. Monitor bus voltage for impedance changes."
+        confidence = 0.88
+    elif "Gyro" in metric:
+        analysis = "Attitude control system (ACS) reporting gyroscopic drift beyond nominal bounds. Likely caused by reaction wheel saturation or solar pressure torque."
+        recommendation = "1. Momentum dumping maneuver required. \n2. recalibrate star trackers. \n3. Switch to magnetorquer-only control temporarily."
+        confidence = 0.85
+    else:
+        analysis = f"Unusual pattern detected in {metric} ({value}). Correlation with historical anomalies suggests a transient single-event upset (SEU) in the telemetry encoder."
+        recommendation = "1. Acknowledge and monitor for recurrence. \n2. Perform soft reset of telemetry unit if persists > 5min."
+        confidence = 0.75
+
+    return AnalysisResponse(
+        anomaly_id=request.anomaly_id,
+        analysis=analysis,
+        recommendation=recommendation,
+        confidence=confidence
+    )
+
 @app.get("/api/v1/chaos/status")
+
 async def get_chaos_status():
     """Get active chaos experiments."""
     # Clean up expired faults
@@ -670,4 +720,4 @@ async def get_chaos_status():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8002)

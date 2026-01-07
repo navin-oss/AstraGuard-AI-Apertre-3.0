@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { MissionState } from '../types/dashboard';
 import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { MissionPanel } from '../components/mission/MissionPanel';
+import { AnomalyInvestigator } from '../components/mission/AnomalyInvestigator';
+import { AnomalyEvent } from '../types/dashboard';
 import dashboardData from '../mocks/dashboard.json';
 
 import { SystemsPanel } from '../components/systems/SystemsPanel';
@@ -17,6 +19,7 @@ import { DesktopTabNav } from '../components/dashboard/DesktopTabNav';
 
 const DashboardContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'mission' | 'systems' | 'chaos'>('mission');
+  const [selectedAnomalyForAnalysis, setSelectedAnomalyForAnalysis] = useState<AnomalyEvent | null>(null);
   const { isConnected } = useDashboard();
   const mission = dashboardData.mission as MissionState;
 
@@ -41,7 +44,7 @@ const DashboardContent: React.FC = () => {
             <>
               {activeTab === 'mission' && (
                 <TransitionWrapper isActive={activeTab === 'mission'}>
-                  <MissionPanel />
+                  <MissionPanel onInvestigate={setSelectedAnomalyForAnalysis} />
                 </TransitionWrapper>
               )}
               {activeTab === 'systems' && (
@@ -53,6 +56,14 @@ const DashboardContent: React.FC = () => {
                 <TransitionWrapper isActive={activeTab === 'chaos'}>
                   <ChaosPanel className="max-w-4xl mx-auto mt-4" />
                 </TransitionWrapper>
+              )}
+
+              {/* AI Investigator Overlay */}
+              {selectedAnomalyForAnalysis && (
+                <AnomalyInvestigator
+                  anomaly={selectedAnomalyForAnalysis}
+                  onClose={() => setSelectedAnomalyForAnalysis(null)}
+                />
               )}
             </>
           )}
