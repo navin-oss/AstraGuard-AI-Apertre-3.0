@@ -64,4 +64,5 @@ Fixed persistent build errors related to dependency file paths.
     - `.github/workflows/ci-cd.yml`
     - `.github/workflows/canary-deploy.yml`
     - `docker/Dockerfile`
-- **Result**: Build pipelines now correctly locate dependencies in the `config/` directory.
+- **Test Requirements**: Updated `config/requirements-test.txt` in workflows.
+- **Result**: Build pipelines now correctly locate all dependency files in the `config/` directory.
