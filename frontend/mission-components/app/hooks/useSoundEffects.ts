@@ -2,14 +2,107 @@ import { useCallback, useRef, useEffect } from 'react';
 
 export const useSoundEffects = () => {
     const audioContextRef = useRef<AudioContext | null>(null);
+    const carrierRef = useRef<OscillatorNode | null>(null);
+    const tensionRef = useRef<OscillatorNode | null>(null);
+    const gainRef = useRef<GainNode | null>(null);
+    const tensionGainRef = useRef<GainNode | null>(null);
+    const lfoRef = useRef<OscillatorNode | null>(null);
 
     useEffect(() => {
-        // Initialize AudioContext on first user interaction or mount
-        // Usually best to do lazy init to handle autoplay policies, but for this hook we set up ref
         if (typeof window !== 'undefined') {
             const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
             audioContextRef.current = new AudioContext();
         }
+        return () => stopDrone();
+    }, []);
+
+    const startDrone = useCallback(() => {
+        if (!audioContextRef.current) return;
+        const ctx = audioContextRef.current;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        // Avoid multiple starts
+        if (carrierRef.current) return;
+
+        // 1. Master Gain (Volume)
+        const masterGain = ctx.createGain();
+        masterGain.gain.value = 0.05; // Low ambient
+        masterGain.connect(ctx.destination);
+        gainRef.current = masterGain;
+
+        // 2. Carrier Oscillator (The "Hum")
+        const carrier = ctx.createOscillator();
+        carrier.type = 'sine';
+        carrier.frequency.value = 60; // 60Hz Low hum
+        carrier.connect(masterGain);
+        carrier.start();
+        carrierRef.current = carrier;
+
+        // 3. LFO (Breathing effect) - Amplitute Modulation
+        const lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.1; // 10 seconds per breath
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.value = 0.02; // Depth of breath
+        lfo.connect(lfoGain);
+        lfoGain.connect(masterGain.gain);
+        lfo.start();
+        lfoRef.current = lfo;
+
+        // 4. Tension Oscillator (The "Alarm" texture)
+        const tension = ctx.createOscillator();
+        tension.type = 'sawtooth';
+        tension.frequency.value = 100; // Dissonant interval
+        const tensionGain = ctx.createGain();
+        tensionGain.gain.value = 0; // Start silent
+        tension.connect(tensionGain);
+        tensionGain.connect(ctx.destination); // Direct out, bypass master LFO for starkness
+        tension.start();
+        tensionRef.current = tension;
+        tensionGainRef.current = tensionGain;
+    }, []);
+
+    const stopDrone = useCallback(() => {
+        const ctx = audioContextRef.current;
+        if (!ctx) return;
+
+        // Ramp down
+        if (gainRef.current) {
+            gainRef.current.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+        }
+        if (tensionGainRef.current) {
+            tensionGainRef.current.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+        }
+
+        setTimeout(() => {
+            carrierRef.current?.stop();
+            tensionRef.current?.stop();
+            lfoRef.current?.stop();
+            carrierRef.current = null;
+            tensionRef.current = null;
+            lfoRef.current = null;
+        }, 1200);
+    }, []);
+
+    const updateDrone = useCallback((cpuLoad: number, anomalyCount: number) => {
+        if (!audioContextRef.current || !carrierRef.current) return;
+        const ctx = audioContextRef.current;
+
+        // Map CPU Load (0-100) to Pitch (60Hz - 120Hz)
+        const targetPitch = 60 + (cpuLoad * 0.6);
+        carrierRef.current.frequency.setTargetAtTime(targetPitch, ctx.currentTime, 1);
+
+        // Map Anomalies to Tension Volume & Detune
+        const tensionVolume = Math.min(anomalyCount * 0.05, 0.2); // Cap at 0.2
+        tensionGainRef.current?.gain.setTargetAtTime(tensionVolume, ctx.currentTime, 0.5);
+
+        if (anomalyCount > 0) {
+            // Add dissonant detune based on severity
+            tensionRef.current?.frequency.setTargetAtTime(100 + (anomalyCount * 13), ctx.currentTime, 0.2);
+        } else {
+            tensionRef.current?.frequency.setTargetAtTime(100, ctx.currentTime, 2);
+        }
+
     }, []);
 
     const playTone = (freq: number, type: OscillatorType, duration: number, volume: number = 0.1) => {
@@ -62,5 +155,5 @@ export const useSoundEffects = () => {
         setTimeout(() => playTone(1000, 'sine', 0.4, 0.05), 100);
     }, []);
 
-    return { playClick, playAlert, playKeystroke, playSuccess };
+    return { playClick, playAlert, playKeystroke, playSuccess, startDrone, stopDrone, updateDrone };
 };

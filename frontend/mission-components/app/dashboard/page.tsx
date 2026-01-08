@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MissionState } from '../types/dashboard';
 import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { MissionPanel } from '../components/mission/MissionPanel';
@@ -20,6 +20,7 @@ import { MobileNavHamburger } from '../components/ui/MobileNavHamburger';
 import { DesktopTabNav } from '../components/dashboard/DesktopTabNav';
 import { CommandPalette } from '../components/ui/CommandPalette';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const DashboardContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'mission' | 'systems' | 'chaos' | 'uplink'>('mission');
@@ -27,6 +28,44 @@ const DashboardContent: React.FC = () => {
   const { isConnected, togglePlay, isReplayMode } = useDashboard();
   const mission = dashboardData.mission as MissionState;
   const [showPalette, setShowPalette] = useState(false);
+
+  // Audio Engine Integration
+  const [activeAudio, setActiveAudio] = useState(false);
+  const { startDrone, stopDrone, updateDrone, playClick } = useSoundEffects();
+
+  // Update drone based on system state
+  useEffect(() => {
+    if (activeAudio && mission) {
+      // Calculate an aggregate load or use a specific metric
+      // Here we use a mock CPU average from the mission data structure or mock it
+      // Assuming mission might have telemetry attached, but for now we look at connected state
+      // Let's use a mock fluctuation if actual telemetry isn't easily accessible in this scope:
+      // Ideally: useDashboard would provide current telemetry frame.
+      // For now, we'll map connected state to a stable hum and anomalies to tension.
+
+      const anomalyCount = (mission.anomalies?.length || 0) + (selectedAnomalyForAnalysis ? 1 : 0);
+      // Mock CPU load for ambient fluctuation effect
+      const mockLoad = 40 + (Math.sin(Date.now() / 2000) * 10) + (anomalyCount * 10);
+
+      updateDrone(mockLoad, anomalyCount);
+    }
+  }, [activeAudio, mission, selectedAnomalyForAnalysis, updateDrone]);
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => stopDrone();
+  }, [stopDrone]);
+
+  const toggleAudio = () => {
+    if (activeAudio) {
+      stopDrone();
+      setActiveAudio(false);
+    } else {
+      startDrone();
+      setActiveAudio(true);
+      playClick();
+    }
+  };
 
   // Keyboard Shortcuts
   useKeyboardShortcuts({
@@ -58,7 +97,16 @@ const DashboardContent: React.FC = () => {
           {/* Desktop: Horizontal (hidden on mobile) */}
           <DesktopTabNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-          <div className="hidden md:block ml-auto">
+          <div className="hidden md:block ml-auto flex items-center gap-4">
+            <button
+              onClick={toggleAudio}
+              className={`flex items-center gap-2 px-3 py-1 rounded border transition-all text-xs uppercase tracking-wider ${activeAudio
+                ? 'border-indigo-500 bg-indigo-500/20 text-indigo-300 shadow-[0_0_10px_rgba(99,102,241,0.3)]'
+                : 'border-slate-700 bg-slate-900 text-slate-500 hover:text-slate-300'
+                }`}
+            >
+              {activeAudio ? '🔊 Sonic' : '🔇 Mute'}
+            </button>
             <ReplayControls />
           </div>
         </nav>
