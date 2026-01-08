@@ -175,8 +175,9 @@ class MissionPhasePolicyLoader:
             self.policy = self.DEFAULT_POLICY.copy()
     
     def _load_file(self, path: str) -> Dict[str, Any]:
-        """Load policy from YAML or JSON file."""
-        return load_config_file(path)
+        """Load policy from YAML or JSON file with environment variable substitution."""
+        from .config_utils import load_config_with_env_vars
+        return load_config_with_env_vars(path)
     
     def _validate_policy(self):
         """Validate policy structure."""

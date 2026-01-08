@@ -150,20 +150,12 @@ class RecoveryConfig:
         self.config = self._load_config()
 
     def _load_config(self) -> Dict[str, Any]:
-        """Load YAML/JSON config with defaults fallback."""
-        if load_config_file and os.path.exists(self.config_path):
+        """Load YAML config with environment variable substitution and defaults fallback."""
+        if os.path.exists(self.config_path):
             try:
-                loaded = load_config_file(self.config_path)
+                from config.config_utils import load_config_with_env_vars
+                loaded = load_config_with_env_vars(self.config_path, self.DEFAULT_CONFIG)
                 return self._merge_dicts(self.DEFAULT_CONFIG, loaded)
-            except Exception as e:
-                logger.warning(f"Failed to load {self.config_path}: {e}, using defaults")
-                return self.DEFAULT_CONFIG.copy()
-        elif os.path.exists(self.config_path):
-            # Fallback to YAML-only loading
-            try:
-                with open(self.config_path, "r") as f:
-                    loaded = yaml.safe_load(f) or {}
-                    return self._merge_dicts(self.DEFAULT_CONFIG, loaded)
             except Exception as e:
                 logger.warning(f"Failed to load {self.config_path}: {e}, using defaults")
                 return self.DEFAULT_CONFIG.copy()
