@@ -57,6 +57,16 @@ export interface GroundStation {
   connectedSatelliteId?: string;
 }
 
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string; // Lucide icon name or emoji
+  unlockedAt?: string;
+  isNew?: boolean;
+  category: 'Tactical' | 'Safety' | 'Historical' | 'Chaos';
+}
+
 export interface HistoricalAnomaly {
   lat: number;
   lng: number;

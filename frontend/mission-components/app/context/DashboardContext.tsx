@@ -3,7 +3,7 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { TelemetryState, WSMessage } from '../types/websocket';
 import { useDashboardWebSocket } from '../hooks/useDashboardWebSocket';
-import { GroundStation, RemediationScript, RemediationStep, AICognitiveState, HistoricalAnomaly } from '../types/dashboard';
+import { GroundStation, RemediationScript, RemediationStep, AICognitiveState, HistoricalAnomaly, Achievement } from '../types/dashboard';
 
 export interface Annotation {
     id: string;
@@ -49,6 +49,11 @@ interface ContextValue {
     aiHealth: AICognitiveState;
     // Historical Intelligence
     historicalAnomalies: HistoricalAnomaly[];
+    // Gamification
+    achievements: Achievement[];
+    unlockAchievement: (id: string) => void;
+    registerChaosRun: () => void;
+    chaosCount: number;
 }
 
 const DashboardContext = createContext<ContextValue | undefined>(undefined);
@@ -88,6 +93,41 @@ export const DashboardProvider: React.FC<{ children: ReactNode }> = ({ children 
         { lat: 0, lng: 120, intensity: 0.75, count: 67, type: 'Debris Potential' },
         { lat: 2, lng: 118, intensity: 0.4, count: 21, type: 'Debris Potential' },
     ]);
+
+    const [achievements, setAchievements] = useState<Achievement[]>([
+        { id: 'chaos-king', title: 'The Chaos King', description: 'Initiate 3 tactical stress tests.', icon: 'Zap', category: 'Chaos' },
+        { id: 'first-responder', title: 'First Responder', description: 'Acknowledge an anomaly.', icon: 'ShieldAlert', category: 'Tactical' },
+        { id: 'historian', title: 'The Historian', description: 'Analyze historical hotspots.', icon: 'Library', category: 'Historical' },
+        { id: 'safety-first', title: 'Safety First', description: 'Execute a successful remediation.', icon: 'CheckCircle2', category: 'Safety' },
+    ]);
+
+    const [chaosCount, setChaosCount] = useState(0);
+
+    const unlockAchievement = (id: string) => {
+        setAchievements(prev => {
+            const ach = prev.find(a => a.id === id);
+            if (ach && ach.unlockedAt) return prev; // Already unlocked
+
+            return prev.map(a =>
+                a.id === id ? { ...a, unlockedAt: new Date().toISOString(), isNew: true } : a
+            );
+        });
+
+        // Clear "isNew" after a delay
+        setTimeout(() => {
+            setAchievements(prev => prev.map(a =>
+                a.id === id ? { ...a, isNew: false } : a
+            ));
+        }, 5000);
+    };
+
+    const registerChaosRun = () => {
+        setChaosCount(prev => {
+            const newCount = prev + 1;
+            if (newCount >= 3) unlockAchievement('chaos-king');
+            return newCount;
+        });
+    };
 
     // Simulate AI Cognitive Fluctuations
     useEffect(() => {
@@ -199,7 +239,11 @@ export const DashboardProvider: React.FC<{ children: ReactNode }> = ({ children 
         cancelRemediation,
         groundStations,
         aiHealth,
-        historicalAnomalies
+        historicalAnomalies,
+        achievements,
+        unlockAchievement,
+        registerChaosRun,
+        chaosCount
     };
 
     return (

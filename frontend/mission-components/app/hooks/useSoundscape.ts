@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 
 export const useSoundscape = () => {
     const audioContextRef = useRef<AudioContext | null>(null);

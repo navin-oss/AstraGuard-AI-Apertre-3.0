@@ -11,9 +11,11 @@ interface Props {
 }
 
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { useDashboard } from '../../context/DashboardContext';
 
 export const AnomalyFeed: React.FC<Props> = ({ anomalies, onAcknowledge, onSelect, onInvestigate, selectedSat }) => {
   const { playAlert } = useSoundEffects();
+  const { unlockAchievement } = useDashboard();
   const prevCount = useRef(anomalies.length);
 
   useEffect(() => {
@@ -107,6 +109,7 @@ export const AnomalyFeed: React.FC<Props> = ({ anomalies, onAcknowledge, onSelec
                         onClick={(e) => {
                           e.stopPropagation();
                           onAcknowledge(anomaly.id);
+                          unlockAchievement('first-responder');
                         }}
                       >
                         ACK

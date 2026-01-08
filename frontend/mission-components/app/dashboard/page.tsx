@@ -27,12 +27,14 @@ import { CopilotChat } from '../components/dashboard/CopilotChat';
 import { ThemeSwitcher } from '../components/ui/ThemeSwitcher';
 import { CommandHUD } from '../components/ui/CommandHUD';
 import { RemediationDrawer } from '../components/mission/RemediationDrawer';
+import { AchievementToast } from '../components/ui/AchievementToast';
+import { AchievementPanel } from '../components/dashboard/AchievementPanel';
 
 const DashboardContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'mission' | 'systems' | 'chaos' | 'uplink'>('mission');
+  const [activeTab, setActiveTab] = useState<'mission' | 'systems' | 'chaos' | 'uplink' | 'vault'>('mission');
   const [selectedAnomalyForAnalysis, setSelectedAnomalyForAnalysis] = useState<AnomalyEvent | null>(null);
   const { isConnected, togglePlay, isReplayMode, isBattleMode, setBattleMode } = useDashboard();
-  const mission = dashboardData.mission as MissionState;
+  const mission = { ...dashboardData.mission, aiHealth: (dashboardData as any).aiHealth, achievements: (dashboardData as any).achievements } as MissionState;
   const [showPalette, setShowPalette] = useState(false);
 
   // Audio Engine Integration
@@ -110,6 +112,7 @@ const DashboardContent: React.FC = () => {
   return (
     <div className="dashboard-container min-h-screen text-white font-mono antialiased">
       <CommandHUD />
+      <AchievementToast />
       <CommandPalette
         isOpen={showPalette}
         onClose={() => setShowPalette(false)}
@@ -180,6 +183,11 @@ const DashboardContent: React.FC = () => {
                   {activeTab === 'uplink' && (
                     <TransitionWrapper isActive={activeTab === 'uplink'}>
                       <CommandTerminal />
+                    </TransitionWrapper>
+                  )}
+                  {activeTab === 'vault' && (
+                    <TransitionWrapper isActive={activeTab === 'vault'}>
+                      <AchievementPanel />
                     </TransitionWrapper>
                   )}
                 </>

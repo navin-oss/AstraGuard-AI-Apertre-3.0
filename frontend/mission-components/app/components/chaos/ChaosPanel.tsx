@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bot, WifiOff, ServerCrash, Activity, Layers, Settings2 } from 'lucide-react';
 import { ScenarioDesigner } from './ScenarioDesigner';
+import { useDashboard } from '../../context/DashboardContext';
 
 interface ChaosPanelProps {
     className?: string;
@@ -11,6 +12,7 @@ interface ChaosPanelProps {
 export const ChaosPanel: React.FC<ChaosPanelProps> = ({ className = "" }) => {
     const [activeFaults, setActiveFaults] = useState<Record<string, number>>({});
     const [isAdvancedMode, setIsAdvancedMode] = useState(false);
+    const { registerChaosRun } = useDashboard();
 
     const fetchStatus = async () => {
         try {
@@ -37,6 +39,7 @@ export const ChaosPanel: React.FC<ChaosPanelProps> = ({ className = "" }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ fault_type: faultType, duration_seconds: duration })
             });
+            registerChaosRun();
             await fetchStatus();
         } catch (e) {
             console.error("Failed to inject fault", e);

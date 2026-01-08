@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 interface Props {
-    activeTab: 'mission' | 'systems' | 'chaos' | 'uplink';
-    onTabChange: (tab: 'mission' | 'systems' | 'chaos' | 'uplink') => void;
+    activeTab: 'mission' | 'systems' | 'chaos' | 'uplink' | 'vault';
+    onTabChange: (tab: 'mission' | 'systems' | 'chaos' | 'uplink' | 'vault') => void;
 }
 
 export const MobileNavHamburger: React.FC<Props> = ({ activeTab, onTabChange }) => {
@@ -87,6 +87,19 @@ export const MobileNavHamburger: React.FC<Props> = ({ activeTab, onTabChange }) 
                             }`}
                     >
                         📡 Uplink
+                    </button>
+                    <button
+                        data-mobile-tab="vault"
+                        onClick={() => {
+                            onTabChange('vault');
+                            setIsOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-xl border flex items-center gap-3 transition-all font-mono font-bold ${activeTab === 'vault'
+                            ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-300 shadow-[0_0_20px_rgba(99,102,241,0.2)]'
+                            : 'bg-black/40 border-white/10 text-gray-400'
+                            }`}
+                    >
+                        🏆 Vault
                     </button>
                 </div>
             </div>
