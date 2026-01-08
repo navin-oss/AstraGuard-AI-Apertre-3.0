@@ -11,6 +11,7 @@ import { ApiDemo } from "@/components/api-demo"
 import { FederatedLearningDashboard } from "@/components/federated-learning-dashboard"
 import { FederatedLearningVisualization } from "@/components/federated-learning-visualization"
 import { FederatedLearningDemo } from "@/components/federated-learning-demo"
+import { MultiCloudAnomalyDashboard } from "@/components/multi-cloud-anomaly-dashboard"
 
 export default function Home() {
   return (
@@ -42,6 +43,23 @@ export default function Home() {
               <FederatedLearningDashboard />
               <FederatedLearningVisualization metrics={[]} participants={[]} />
             </div>
+          </div>
+        </section>
+
+        {/* Multi-Cloud Anomaly Detection Section */}
+        <section id="multi-cloud-anomaly" className="py-20 bg-white dark:bg-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Multi-Cloud Anomaly Detection
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Unified monitoring and recovery across AWS, Azure, and GCP. Detect and respond to
+                anomalies with provider-agnostic strategies in hybrid and multi-cloud environments.
+              </p>
+            </div>
+
+            <MultiCloudAnomalyDashboard />
           </div>
         </section>
 
