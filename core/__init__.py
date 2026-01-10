@@ -20,6 +20,14 @@ from .component_health import (
     SystemHealthMonitor,
     HealthStatus,
 )
+from .rate_limiter import (
+    RateLimiter,
+    RateLimitMiddleware,
+    rate_limit_hits,
+    rate_limit_blocks,
+    rate_limit_latency,
+    get_rate_limit_config,
+)
 
 __all__ = [
     # Exceptions
@@ -36,4 +44,11 @@ __all__ = [
     "ComponentHealth",
     "SystemHealthMonitor",
     "HealthStatus",
+    # Rate limiting
+    "RateLimiter",
+    "RateLimitMiddleware",
+    "rate_limit_hits",
+    "rate_limit_blocks",
+    "rate_limit_latency",
+    "get_rate_limit_config",
 ]
