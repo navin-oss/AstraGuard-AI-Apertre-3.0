@@ -48,6 +48,7 @@ from core.auth import (
     Permission,
     User,
 )
+from api.auth import get_api_key
 from state_machine.state_engine import StateMachine, MissionPhase
 from config.mission_phase_policy_loader import MissionPhasePolicyLoader
 from anomaly_agent.phase_aware_handler import PhaseAwareAnomalyHandler
