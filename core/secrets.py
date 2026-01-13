@@ -316,20 +316,7 @@ def mask_secret(value: str, visible_chars: int = 4) -> str:
         # Output: "Using API key: ****xyz1"
     """
     return secrets_manager.mask(value, visible_chars)
-Secrets Management Module for AstraGuard AI
 
-Provides secure encrypted storage, retrieval, and rotation of sensitive configuration
-including API keys, database credentials, and AI model access tokens.
-
-Features:
-- Fernet symmetric encryption for local storage
-- On-demand decryption for secret retrieval
-- Automatic secret rotation with key updates
-- Integration with external secret managers (HashiCorp Vault, AWS Secrets Manager)
-- Secret versioning for rollback capabilities
-- Health checks for secret accessibility
-- Validation to prevent secrets from being logged or exposed
-"""
 
 import os
 import json
