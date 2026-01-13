@@ -241,10 +241,10 @@ class TimeoutConfig:
         import os
         
         # Load from environment or use defaults
-        self.model_load_timeout = get_secret('timeout_model_load')
-        self.inference_timeout = get_secret('timeout_inference')
-        self.redis_timeout = get_secret('timeout_redis')
-        self.file_io_timeout = get_secret('timeout_file_io')
+        self.model_load_timeout = float(get_secret('timeout_model_load', default='300') or '300')
+        self.inference_timeout = float(get_secret('timeout_inference', default='60') or '60')
+        self.redis_timeout = float(get_secret('timeout_redis', default='5') or '5')
+        self.file_io_timeout = float(get_secret('timeout_file_io', default='30') or '30')
         
         logger.info(
             f"Timeout config loaded: model={self.model_load_timeout}s, "

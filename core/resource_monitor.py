@@ -369,43 +369,46 @@ class ResourceMonitor:
             'overall': ResourceStatus.HEALTHY
         }
         
-        # Check CPU
-        if metrics.cpu_percent >= self.thresholds.cpu_critical:
-            status['cpu'] = ResourceStatus.CRITICAL
-            logger.warning(
-                f"CPU critical: {metrics.cpu_percent:.1f}% "
-                f"(threshold: {self.thresholds.cpu_critical}%)"
-            )
-        elif metrics.cpu_percent >= self.thresholds.cpu_warning:
-            status['cpu'] = ResourceStatus.WARNING
-            logger.info(
-                f"CPU warning: {metrics.cpu_percent:.1f}% "
-                f"(threshold: {self.thresholds.cpu_warning}%)"
-            )
+        # Check CPU (handle None values)
+        if metrics.cpu_percent is not None:
+            if metrics.cpu_percent >= self.thresholds.cpu_critical:
+                status['cpu'] = ResourceStatus.CRITICAL
+                logger.warning(
+                    f"CPU critical: {metrics.cpu_percent:.1f}% "
+                    f"(threshold: {self.thresholds.cpu_critical}%)"
+                )
+            elif metrics.cpu_percent >= self.thresholds.cpu_warning:
+                status['cpu'] = ResourceStatus.WARNING
+                logger.info(
+                    f"CPU warning: {metrics.cpu_percent:.1f}% "
+                    f"(threshold: {self.thresholds.cpu_warning}%)"
+                )
         
-        # Check Memory
-        if metrics.memory_percent >= self.thresholds.memory_critical:
-            status['memory'] = ResourceStatus.CRITICAL
-            logger.warning(
-                f"Memory critical: {metrics.memory_percent:.1f}% "
-                f"(threshold: {self.thresholds.memory_critical}%)"
-            )
-        elif metrics.memory_percent >= self.thresholds.memory_warning:
-            status['memory'] = ResourceStatus.WARNING
-            logger.info(
-                f"Memory warning: {metrics.memory_percent:.1f}% "
-                f"(threshold: {self.thresholds.memory_warning}%)"
-            )
+        # Check Memory (handle None values)
+        if metrics.memory_percent is not None:
+            if metrics.memory_percent >= self.thresholds.memory_critical:
+                status['memory'] = ResourceStatus.CRITICAL
+                logger.warning(
+                    f"Memory critical: {metrics.memory_percent:.1f}% "
+                    f"(threshold: {self.thresholds.memory_critical}%)"
+                )
+            elif metrics.memory_percent >= self.thresholds.memory_warning:
+                status['memory'] = ResourceStatus.WARNING
+                logger.info(
+                    f"Memory warning: {metrics.memory_percent:.1f}% "
+                    f"(threshold: {self.thresholds.memory_warning}%)"
+                )
         
-        # Check Disk
-        if metrics.disk_usage_percent >= self.thresholds.disk_critical:
-            status['disk'] = ResourceStatus.CRITICAL
-            logger.warning(
-                f"Disk critical: {metrics.disk_usage_percent:.1f}% "
-                f"(threshold: {self.thresholds.disk_critical}%)"
-            )
-        elif metrics.disk_usage_percent >= self.thresholds.disk_warning:
-            status['disk'] = ResourceStatus.WARNING
+        # Check Disk (handle None values)
+        if metrics.disk_usage_percent is not None:
+            if metrics.disk_usage_percent >= self.thresholds.disk_critical:
+                status['disk'] = ResourceStatus.CRITICAL
+                logger.warning(
+                    f"Disk critical: {metrics.disk_usage_percent:.1f}% "
+                    f"(threshold: {self.thresholds.disk_critical}%)"
+                )
+            elif metrics.disk_usage_percent >= self.thresholds.disk_warning:
+                status['disk'] = ResourceStatus.WARNING
         
         # Determine overall status (worst status wins)
         if any(s == ResourceStatus.CRITICAL for s in status.values()):

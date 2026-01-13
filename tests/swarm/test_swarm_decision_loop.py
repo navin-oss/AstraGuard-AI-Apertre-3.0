@@ -386,7 +386,7 @@ class TestLeaderFollowerDecisions:
         telemetry = create_test_telemetry()
         decisions = []
         for agent in agents:
-            decision = asyncio.run(agent.step(telemetry))
+            decision = await agent.step(telemetry)
             decisions.append(decision)
 
         # All should converge on same action
@@ -409,12 +409,17 @@ class TestDecisionConvergence:
 
         # Same decision from inner loop
         decision_action = "handle_thermal_anomaly"
-        mock_inner_loop.reason = AsyncMock(return_value=Decision(
+        decision_result = Decision(
             decision_type=DecisionType.ANOMALY_RESPONSE,
             action=decision_action,
             confidence=0.92,
             reasoning="Thermal spike detected",
-        ))
+        )
+        mock_inner_loop.reason = AsyncMock(return_value=decision_result)
+        mock_registry.get_alive_peers = MagicMock(return_value=[])
+        mock_registry.get_peer_health = MagicMock(return_value=None)
+        mock_election.is_leader = MagicMock(return_value=False)
+        mock_election.get_leader = AsyncMock(return_value=None)
 
         # Create 5 agents
         agents = []

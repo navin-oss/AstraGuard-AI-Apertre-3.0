@@ -174,42 +174,12 @@ _in_memory_limiter = InMemoryRateLimiter()
 
 def check_rate_limit(ip_address: str) -> bool:
     """Check if IP is within rate limit"""
-    if REDIS_AVAILABLE:
-        try:
-            redis_client = RedisClient()
-            key = f"contact_rate_limit:{ip_address}"
-            
-            # Get current count
-            count = redis_client.get(key)
-            if count is None:
-                count = 0
-            else:
-                count = int(count)
-            
-            if count >= RATE_LIMIT_SUBMISSIONS:
-                return False
-            
-            # Increment counter
-            if count == 0:
-                redis_client.setex(key, RATE_LIMIT_WINDOW, 1)
-            else:
-                redis_client.incr(key)
-            
-            return True
-        except Exception as e:
-            print(f"Redis rate limiting error: {e}")
-            # Fallback to in-memory
-            return _in_memory_limiter.is_allowed(
-                f"contact:{ip_address}",
-                RATE_LIMIT_SUBMISSIONS,
-                RATE_LIMIT_WINDOW
-            )
-    else:
-        return _in_memory_limiter.is_allowed(
-            f"contact:{ip_address}",
-            RATE_LIMIT_SUBMISSIONS,
-            RATE_LIMIT_WINDOW
-        )
+    # Use in-memory rate limiter (reliable and doesn't require Redis)
+    return _in_memory_limiter.is_allowed(
+        f"contact:{ip_address}",
+        RATE_LIMIT_SUBMISSIONS,
+        RATE_LIMIT_WINDOW
+    )
 
 
 def get_client_ip(request: Request) -> str:
@@ -331,9 +301,12 @@ async def submit_contact_form(
     # Honeypot spam protection
     if submission.website:
         # Bot detected - return fake success to avoid revealing honeypot
-        return ContactResponse(
-            success=True,
-            message="Thank you for your message! We'll get back to you within 24-48 hours."
+        return JSONResponse(
+            status_code=201,
+            content={
+                "success": True,
+                "message": "Thank you for your message! We'll get back to you within 24-48 hours."
+            }
         )
     
     # Get client info

@@ -118,3 +118,13 @@ class FallbackManager:
     def is_safe_mode(self):
         """Delegate to new implementation."""
         return self._impl.is_safe_mode()
+
+    @property
+    def current_mode(self):
+        """Get the current mode from implementation."""
+        return self._impl.current_mode
+
+    @current_mode.setter
+    def current_mode(self, value):
+        """Set the current mode in implementation."""
+        self._impl.current_mode = value

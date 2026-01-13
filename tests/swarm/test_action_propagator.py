@@ -15,6 +15,7 @@ import pytest
 import asyncio
 from datetime import datetime, timedelta
 from unittest.mock import Mock, AsyncMock, patch
+from uuid import uuid5, NAMESPACE_DNS
 
 from astraguard.swarm.action_propagator import (
     ActionPropagator, ActionState, ActionPropagatorMetrics
@@ -31,25 +32,25 @@ from astraguard.swarm.consensus import NotLeaderError
 @pytest.fixture
 def leader_agent_id():
     """Create leader agent ID."""
-    return AgentID(constellation="astra-v3.0", satellite_serial="LEADER-001", uuid=None)
+    return AgentID(constellation="astra-v3.0", satellite_serial="LEADER-001", uuid=uuid5(NAMESPACE_DNS, "astra-v3.0:LEADER-001"))
 
 
 @pytest.fixture
 def agent_id_1():
     """Create agent ID 1."""
-    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-001", uuid=None)
+    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-001", uuid=uuid5(NAMESPACE_DNS, "astra-v3.0:SAT-001"))
 
 
 @pytest.fixture
 def agent_id_2():
     """Create agent ID 2."""
-    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-002", uuid=None)
+    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-002", uuid=uuid5(NAMESPACE_DNS, "astra-v3.0:SAT-002"))
 
 
 @pytest.fixture
 def agent_id_3():
     """Create agent ID 3."""
-    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-003", uuid=None)
+    return AgentID(constellation="astra-v3.0", satellite_serial="SAT-003", uuid=uuid5(NAMESPACE_DNS, "astra-v3.0:SAT-003"))
 
 
 @pytest.fixture
