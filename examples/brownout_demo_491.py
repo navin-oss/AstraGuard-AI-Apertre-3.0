@@ -11,11 +11,13 @@ Shows:
 """
 
 import sys
+from pathlib import Path
 from datetime import datetime, timedelta
 import numpy as np
 
 # Add project root to path
-sys.path.insert(0, str((__file__.parent).parent.parent))
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from astraguard.hil.simulator.power import PowerSimulator
 from astraguard.hil.simulator.faults.power_brownout import PowerBrownoutFault
@@ -266,10 +268,10 @@ def part_6_severity_comparison():
 def main():
     """Run brownout fault demonstration."""
     print("\n")
-    print("╔" + "=" * 68 + "╗")
-    print("║" + " " * 10 + "ASTRAGUARD HIL: POWER BROWNOUT FAULT DEMO" + " " * 16 + "║")
-    print("║" + " " * 15 + "Issue #491 - Configurable Fault Injection" + " " * 14 + "║")
-    print("╚" + "=" * 68 + "╝")
+    print("=" * 70)
+    print("  ASTRAGUARD HIL: POWER BROWNOUT FAULT DEMO")
+    print("  Issue #491 - Configurable Fault Injection")
+    print("=" * 70)
     
     # Run all demonstration parts
     part_1_baseline()

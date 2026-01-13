@@ -19,6 +19,7 @@ from .attitude import AttitudeSimulator
 from .power import PowerSimulator
 from .thermal import ThermalSimulator
 from .orbit import OrbitSimulator
+from .comms import CommsSimulator
 
 
 class SatelliteSimulator(ABC):
@@ -120,6 +121,10 @@ class StubSatelliteSimulator(SatelliteSimulator):
         
         # Orbital mechanics simulator
         self.orbit_sim = OrbitSimulator(sat_id)
+        
+        # Communications simulator
+        self.comms_sim = CommsSimulator(sat_id)
+        self._comms_fault: Optional[object] = None
     
     async def generate_telemetry(self) -> TelemetryPacket:
         """
@@ -178,6 +183,11 @@ class StubSatelliteSimulator(SatelliteSimulator):
         
         thermal = self.thermal_sim.get_thermal_data()
         
+        # Update comms simulator - coupled to power and orbit (range)
+        # Altitude in meters → range in km (simplified: altitude/1000)
+        range_km = max(500.0, orbit.altitude_m / 1000.0)
+        self.comms_sim.update(power_voltage=power.battery_voltage, range_km=range_km)
+        
         # Build packet
         packet = TelemetryPacket(
             timestamp=timestamp,
@@ -217,6 +227,16 @@ class StubSatelliteSimulator(SatelliteSimulator):
             pass
         elif fault_type == "thermal_runaway":
             self.thermal_sim.inject_runaway_fault(severity)
+        elif fault_type == "comms_dropout":
+            from .faults.comms_dropout import CommsDropoutFault
+            packet_loss = 0.3 + severity * 0.5  # 0.3-0.8 based on severity
+            self._comms_fault = CommsDropoutFault(
+                self.sat_id, 
+                pattern="gilbert", 
+                packet_loss=packet_loss, 
+                duration=duration
+            )
+            self._comms_fault.inject()
         
         print(
             f"Sat {self.sat_id}: Injected {fault_type} fault "
