@@ -93,6 +93,19 @@ class SatelliteSimulator(ABC):
             packet: TelemetryPacket to record
         """
         self._telemetry_history.append(packet)
+    
+    def add_nearby_sat(self, sat_id: str, distance_km: float) -> None:
+        """
+        Register nearby satellite in formation for cascade propagation.
+        
+        Used for thermal cascade and comms range calculations in formation.
+        
+        Args:
+            sat_id: Satellite identifier string
+            distance_km: Distance to this satellite (km)
+        """
+        from .faults.thermal_runaway import NeighborProximity
+        self.thermal_sim.nearby_sats.append(NeighborProximity(sat_id, distance_km, 1.0))
 
 
 class StubSatelliteSimulator(SatelliteSimulator):
@@ -226,7 +239,9 @@ class StubSatelliteSimulator(SatelliteSimulator):
             # Attitude fault will be injected on next telemetry generation
             pass
         elif fault_type == "thermal_runaway":
-            self.thermal_sim.inject_runaway_fault(severity)
+            # Cascade fault: contagion_rate = 0.3 + severity * 0.4 (0.3-0.7 range)
+            contagion_rate = 0.3 + severity * 0.4
+            self.thermal_sim.inject_runaway_fault(contagion_rate=contagion_rate)
         elif fault_type == "comms_dropout":
             from .faults.comms_dropout import CommsDropoutFault
             packet_loss = 0.3 + severity * 0.5  # 0.3-0.8 based on severity

@@ -17,7 +17,7 @@ Physics Model:
 
 import numpy as np
 from pydantic import BaseModel, Field
-from typing import Dict
+from typing import Dict, List, Optional
 from ..schemas.telemetry import ThermalData
 
 
@@ -70,8 +70,12 @@ class ThermalSimulator:
         self._runaway_triggered = False     # Persistent runaway state
         self._time_in_critical = 0.0        # Tracks duration at critical temp
         
+        # Cascade/formation awareness
+        self._thermal_fault: Optional[object] = None  # ThermalRunawayFault instance
+        self.nearby_sats: List[object] = []  # NeighborProximity list for formation
+        
     def update(self, dt: float, solar_flux: float, attitude_error_deg: float, eclipse: bool = False):
-        """Propagate thermal state with coupled physics.
+        """Propagate thermal state with coupled physics and cascade effects.
         
         Heat flow model:
         - Solar heating: absorption increases with attitude error (tumbling = oven)
@@ -79,6 +83,7 @@ class ThermalSimulator:
         - Radiative cooling: proportional to temp above background (3K space)
         - Eclipse: reduced solar input
         - Fault: degraded radiator capacity
+        - Cascade: nearby infected satellites add heat input
         
         Args:
             dt: Time step (seconds)
@@ -90,6 +95,7 @@ class ThermalSimulator:
             - Attitude error 0-90°: absorption multiplier 1.0-2.0 (tumble = 2x heating)
             - Eclipse: solar_flux forced to 0 regardless of input
             - Temperature bounds: -40°C (cold case) to +80°C (survival limit)
+            - Cascade: each nearby infected satellite adds 1-3W heat
         """
         # Enforce eclipse condition
         if eclipse:
@@ -107,11 +113,23 @@ class ThermalSimulator:
         # Total heat input (W)
         total_heat_w = self.base_heat_w + solar_heating_w
         
+        # Cascade effects: nearby infected satellites add heat input
+        if self._thermal_fault and self._thermal_fault.active:
+            # Each infected neighbor adds 1-3W ambient heat (thermal coupling)
+            cascade_heat_w = len(self._thermal_fault.infected_neighbors) * 2.0
+            total_heat_w += cascade_heat_w
+            
+            # Attempt to infect new neighbors each update
+            for neighbor in self.nearby_sats:
+                if neighbor.sat_id not in self._thermal_fault.infected_neighbors:
+                    if self._thermal_fault.infect_neighbor(neighbor):
+                        self._thermal_fault.infected_neighbors.append(neighbor.sat_id)
+        
         # Thermal runaway fault: degraded radiator capacity
         radiator_capacity = self.radiator_capacity_wk
-        if self._fault_active:
+        if self._fault_active or (self._thermal_fault and self._thermal_fault.active):
             total_heat_w *= 1.8  # Heater power goes into heat instead of dissipating
-            radiator_capacity *= 0.2  # 80% cooling loss - realistic radiator failure
+            radiator_capacity *= 0.1  # 90% cooling loss - catastrophic radiator failure
         
         # Temperature rates (°C/s) using thermal mass and capacitance
         # Rate = (Heat in - Heat out) / Thermal mass
@@ -146,27 +164,39 @@ class ThermalSimulator:
         self.eps_temp = np.clip(self.eps_temp, -40, 85)
         self.payload_temp = np.clip(self.payload_temp, -40, 75)
     
-    def inject_runaway_fault(self, severity: float = 1.0):
-        """Inject thermal runaway fault (radiator/heater failure).
+    def inject_runaway_fault(self, contagion_rate: float = 0.2):
+        """Inject thermal runaway fault with cascade contagion model.
         
-        Models catastrophic radiator degradation or heater failure causing
-        thermal cascade. Radiator capacity drops to 20% of nominal (80% loss).
-        This represents:
-        - Radiator micrometeorite damage
-        - Paint degradation in LEO
-        - Heater control loop failure
+        Primary infection: Creates radiator failure that spreads to nearby satellites
+        through formation heat coupling. Implements distance-based infection probability.
         
         Args:
-            severity: Fault severity multiplier (1.0 = full fault)
+            contagion_rate: Base infection probability (0.05-0.8)
+                - 0.2 (default): ~40% infection at 1km, ~20% at 3km
+                - 0.4: ~80% at 1km (aggressive cascade)
+                - 0.05: ~10% at 1km (slow cascade)
         
         Physics impact:
-            - Heat dissipation drops dramatically
-            - Temperature rise accelerates
-            - Can trigger thermal runaway cascade
-            - Status shifts to critical within minutes
+            - Radiator capacity drops to 10% (catastrophic failure)
+            - Infected neighbors add 2W+ heat input per update
+            - Patient zero reaches critical (~60°C) in 60-120 seconds
+            - Nearby satellites (1-3km) infected within 20-40 seconds
         """
+        from .faults.thermal_runaway import ThermalRunawayFault
+        
+        # Create cascade fault with contagion parameters
+        self._thermal_fault = ThermalRunawayFault(
+            sat_id=self.sat_id,
+            contagion_rate=contagion_rate,
+            duration=600.0  # 10 minute cascade
+        )
+        
+        # Activate primary infection
+        self._thermal_fault.inject()
         self._fault_active = True
-        self.radiator_capacity_wk *= (0.2 + 0.8 * (1.0 - severity))  # 20% min capacity
+        
+        # Degrade radiator to 10% capacity (catastrophic)
+        self.radiator_capacity_wk *= 0.1
     
     def recover_from_fault(self):
         """Recover from thermal fault (e.g., heater restart, radiator repairs).
