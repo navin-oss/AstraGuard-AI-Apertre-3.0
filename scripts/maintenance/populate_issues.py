@@ -11,27 +11,28 @@ TEMPLATES = [
     {
         "title": "Documentation: Enhance docstrings for `{filename}`",
         "body": "The module `{path}` currently lacks comprehensive docstrings. \n\n**Task:**\n- Add module-level docstrings.\n- Add function/class-level docstrings following Google/NumPy style guidelines.\n- Ensure all parameters and return types are documented.",
-        "labels": ["documentation", "good first issue", "difficulty: easy"]
+        "labels": ["documentation", "good first issue", "difficulty: easy", "apertre3.0"]
     },
     {
         "title": "Typing: Add type hints to `{filename}`",
         "body": "To improve code reliability and developer experience, we need full type annotation coverage.\n\n**Task:**\n- Add Python type hints to `{path}`.\n- Run `mypy` to verify correctness.\n- Ensure complex types are properly imported from `typing`.",
-        "labels": ["enhancement", "typing", "difficulty: easy"]
+        "labels": ["enhancement", "typing", "difficulty: easy", "apertre3.0"]
     },
     {
         "title": "Testing: Implement unit tests for `{filename}`",
         "body": "We need to ensure high reliability for `{path}`.\n\n**Task:**\n- Create a test file in `tests/` mirroring the structure.\n- Implement unit tests using `pytest`.\n- Aim for at least 80% code coverage for this module.",
-        "labels": ["testing", "help wanted", "difficulty: medium"]
+        "labels": ["testing", "help wanted", "difficulty: medium", "apertre3.0"]
     },
     {
         "title": "Refactor: Improve error handling in `{filename}`",
         "body": "Review the error handling logic in `{path}`.\n\n**Task:**\n- Ensure specific exceptions are caught instead of generic `Exception`.\n- Verify that errors are logged meaningfully.\n- suggest improvements for edge cases.",
-        "labels": ["refactor", "quality", "difficulty: medium"]
+        "labels": ["refactor", "quality", "difficulty: medium", "apertre3.0"]
     },
     {
         "title": "Optimization: Performance Review for `{filename}`",
         "body": "Analyze `{path}` for potential performance bottlenecks.\n\n**Task:**\n- identifying loops or I/O operations that could be optimized.\n- Consider async/await usage if applicable.\n- Benchmark before and after changes if optimizations are applied.",
-        "labels": ["optimization", "performance", "difficulty: hard"]
+        "labels": ["optimization", "performance", "difficulty: hard", "apertre3.0"]
+
     }
 ]
 
