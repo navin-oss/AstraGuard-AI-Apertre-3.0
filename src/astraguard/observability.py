@@ -4,12 +4,15 @@ Core business and reliability metrics for production monitoring
 """
 
 from prometheus_client import (
-    Counter, Histogram, Gauge, Summary, 
+    Counter, Histogram, Gauge, Summary,
     start_http_server, REGISTRY, CollectorRegistry
 )
 from contextlib import contextmanager
 import time
+import logging
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 # ============================================================================
 # SAFE METRIC INITIALIZATION (handles test reruns gracefully)
@@ -21,6 +24,7 @@ def _safe_create_metric(metric_class, name, *args, **kwargs):
         return metric_class(*args, **kwargs)
     except ValueError as e:
         if "Duplicated timeseries" in str(e):
+            logger.warning(f"Metric {name} already exists, attempting to retrieve from registry")
             # Metric already exists, retrieve it from registry
             for collector in REGISTRY._collector_to_names:
                 if hasattr(collector, '_name') and collector._name == name:
@@ -29,9 +33,16 @@ def _safe_create_metric(metric_class, name, *args, **kwargs):
                     for metric_name, metric_obj in collector._metrics.items():
                         if metric_name == name:
                             return metric_obj
-            # If not found in registry, create with new registry
-            return metric_class(*args, **kwargs)
-        raise
+            # If not found in registry, log error and create with new registry
+            logger.error(f"Metric {name} not found in registry after duplicate error, creating new")
+            try:
+                return metric_class(*args, **kwargs)
+            except Exception as inner_e:
+                logger.error(f"Failed to create metric {name} with new registry: {inner_e}")
+                raise
+        else:
+            logger.error(f"ValueError creating metric {name}: {e}")
+            raise
 
 # ============================================================================
 # CORE HTTP METRICS
@@ -42,7 +53,8 @@ try:
         'Total HTTP requests',
         ['method', 'endpoint', 'status']
     )
-except ValueError:
+except ValueError as e:
+    logger.error(f"Failed to create REQUEST_COUNT metric: {e}")
     REQUEST_COUNT = None
 
 try:
@@ -286,7 +298,10 @@ def track_anomaly_detection():
         duration = time.time() - start
         if DETECTION_LATENCY:
             DETECTION_LATENCY.observe(duration)
-    except Exception:
+    except Exception as e:
+        logger.error(f"Anomaly detection failed: {e}")
+        if ERRORS:
+            ERRORS.labels(type=type(e).__name__, endpoint="anomaly_detection").inc()
         raise
 
 
@@ -312,7 +327,10 @@ def track_chaos_recovery(chaos_type: str):
         duration = time.time() - start
         if CHAOS_RECOVERY_TIME:
             CHAOS_RECOVERY_TIME.labels(type=chaos_type).observe(duration)
-    except Exception:
+    except Exception as e:
+        logger.error(f"Chaos recovery failed for {chaos_type}: {e}")
+        if ERRORS:
+            ERRORS.labels(type=type(e).__name__, endpoint="chaos_recovery").inc()
         raise
 
 
@@ -353,9 +371,15 @@ def get_registry() -> CollectorRegistry:
 def get_metrics_endpoint() -> bytes:
     """
     Generate Prometheus-format metrics response
-    
+
     Returns:
         Bytes containing all metrics in Prometheus text format
     """
-    from prometheus_client import generate_latest, REGISTRY
-    return generate_latest(REGISTRY)
+    try:
+        from prometheus_client import generate_latest, REGISTRY
+        return generate_latest(REGISTRY)
+    except Exception as e:
+        logger.error(f"Failed to generate metrics endpoint: {e}")
+        if ERRORS:
+            ERRORS.labels(type=type(e).__name__, endpoint="metrics_endpoint").inc()
+        raise

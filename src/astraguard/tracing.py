@@ -12,11 +12,13 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
-from contextlib import contextmanager
+from contextlib import contextmanager, asynccontextmanager
 import logging
 import os
 from typing import Optional, Any
 from core.secrets import get_secret
+import asyncio
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +26,19 @@ logger = logging.getLogger(__name__)
 # JAEGER EXPORTER CONFIGURATION
 # ============================================================================
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=1, max=10),
+    retry=retry_if_exception_type((ConnectionError, OSError)),
+    reraise=True
+)
 def initialize_tracing(
     service_name: str = "astra-guard",
     jaeger_host: str = "localhost",
     jaeger_port: int = 6831,
-    enabled: bool = True
+    enabled: bool = True,
+    batch_size: int = 512,
+    export_interval: float = 5.0
 ) -> TracerProvider:
     """
     Initialize OpenTelemetry tracing with Jaeger backend
@@ -51,6 +61,7 @@ def initialize_tracing(
         jaeger_exporter = JaegerExporter(
             agent_host_name=jaeger_host,
             agent_port=jaeger_port,
+            transport_format="grpc",
         )
         
         # Create tracer provider with service resource
@@ -61,7 +72,11 @@ def initialize_tracing(
         })
         
         provider = TracerProvider(resource=resource)
-        processor = BatchSpanProcessor(jaeger_exporter)
+        processor = BatchSpanProcessor(
+            jaeger_exporter,
+            max_export_batch_size=batch_size,
+            schedule_delay_millis=int(export_interval * 1000)
+        )
         provider.add_span_processor(processor)
         
         # Set global tracer provider
@@ -85,6 +100,8 @@ def setup_auto_instrumentation():
         RequestsInstrumentor().instrument()
         RedisInstrumentor().instrument()
         logger.info("✅ Auto-instrumentation enabled for requests and Redis")
+    except ImportError as e:
+        logger.warning(f"⚠️  Missing instrumentation library: {e}")
     except Exception as e:
         logger.warning(f"⚠️  Failed to setup auto-instrumentation: {e}")
 
@@ -92,13 +109,15 @@ def setup_auto_instrumentation():
 def instrument_fastapi(app):
     """
     Instrument FastAPI application with OpenTelemetry
-    
+
     Args:
         app: FastAPI application instance
     """
     try:
         FastAPIInstrumentor.instrument_app(app)
         logger.info("✅ FastAPI instrumented with OpenTelemetry")
+    except ImportError as e:
+        logger.warning(f"⚠️  Missing FastAPI instrumentation: {e}")
     except Exception as e:
         logger.warning(f"⚠️  Failed to instrument FastAPI: {e}")
 
@@ -271,5 +290,73 @@ def shutdown_tracing():
         if hasattr(provider, 'force_flush'):
             provider.force_flush()
         logger.info("✅ Tracing flushed and shutdown complete")
+    except ConnectionError as e:
+        logger.warning(f"⚠️  Connection error during tracing shutdown: {e}")
     except Exception as e:
         logger.warning(f"⚠️  Error during tracing shutdown: {e}")
+
+
+# ============================================================================
+# ASYNC CONTEXT MANAGERS
+# ============================================================================
+
+@asynccontextmanager
+async def async_span(name: str, attributes: Optional[dict] = None):
+    """
+    Async context manager for creating spans
+
+    Args:
+        name: Span name
+        attributes: Optional span attributes
+
+    Example:
+        async with async_span("database_query", {"table": "users"}):
+            # Do async work
+            pass
+    """
+    tracer = get_tracer()
+    with tracer.start_as_current_span(name) as span_obj:
+        if attributes:
+            for key, value in attributes.items():
+                span_obj.set_attribute(key, str(value))
+        yield span_obj
+
+
+@asynccontextmanager
+async def async_span_anomaly_detection(data_size: int, model_name: str = "default"):
+    """
+    Async trace anomaly detection workflow with sub-spans
+
+    Args:
+        data_size: Size of input data
+        model_name: Name of ML model
+    """
+    tracer = get_tracer()
+    with tracer.start_as_current_span("anomaly_detection") as main_span:
+        main_span.set_attribute("data.size", data_size)
+        main_span.set_attribute("model", model_name)
+
+        try:
+            yield main_span
+        except Exception as e:
+            main_span.record_exception(e)
+            raise
+
+
+@asynccontextmanager
+async def async_span_external_call(service: str, operation: str, timeout: float = None):
+    """
+    Async trace external service calls (API, database, etc.)
+
+    Args:
+        service: External service name
+        operation: Operation being performed
+        timeout: Operation timeout in seconds
+    """
+    tracer = get_tracer()
+    with tracer.start_as_current_span("external_call") as span_obj:
+        span_obj.set_attribute("service", service)
+        span_obj.set_attribute("operation", operation)
+        if timeout:
+            span_obj.set_attribute("timeout", timeout)
+        yield span_obj

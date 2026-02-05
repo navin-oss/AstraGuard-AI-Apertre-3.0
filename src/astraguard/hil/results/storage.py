@@ -1,4 +1,12 @@
-"""Test result persistence and retrieval."""
+"""Test result persistence and retrieval.
+
+This module provides functionality for storing and retrieving test results
+from Hardware-in-the-Loop (HIL) simulations. It includes the ResultStorage class
+for managing result files, campaign summaries, and aggregate statistics.
+
+Classes:
+    ResultStorage: Handles saving, loading, and managing test result data.
+"""
 
 import json
 import logging
@@ -12,14 +20,22 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class ResultStorage:
-    """Manages persistent storage and retrieval of test results."""
+    """Manages persistent storage and retrieval of test results.
+
+    This class provides methods to save individual scenario results, retrieve
+    results for specific scenarios or campaigns, and compute aggregate statistics.
+    Results are stored as JSON files in a specified directory.
+
+    Attributes:
+        results_dir (Path): Directory where result files are stored.
+    """
 
     def __init__(self, results_dir: str = "astraguard/hil/results") -> None:
         """
         Initialize result storage.
 
         Args:
-            results_dir: Directory for result files
+            results_dir (str): Directory for result files.
         """
         self.results_dir: Path = Path(results_dir)
         self.results_dir.mkdir(parents=True, exist_ok=True)
@@ -31,11 +47,15 @@ class ResultStorage:
         Save individual scenario result to file.
 
         Args:
-            scenario_name: Name of scenario (without .yaml)
-            result: Execution result dict
+            scenario_name (str): Name of scenario (without .yaml).
+            result (Dict[str, Any]): Execution result dict.
 
         Returns:
-            Path to saved result file
+            str: Path to saved result file.
+
+        Raises:
+            OSError: If there is an issue writing to the file.
+            ValueError: If the result dict contains non-serializable data.
         """
         if not scenario_name or not isinstance(scenario_name, str):
             raise ValueError(f"Invalid scenario_name: {scenario_name}")
@@ -72,11 +92,15 @@ class ResultStorage:
         Retrieve recent results for a specific scenario.
 
         Args:
-            scenario_name: Name of scenario
-            limit: Maximum results to return
+            scenario_name (str): Name of scenario.
+            limit (int, optional): Maximum results to return. Defaults to 10.
 
         Returns:
-            List of result dicts (newest first)
+            List[Dict[str, Any]]: List of result dicts (newest first).
+
+        Raises:
+            OSError: If there is an issue reading result files.
+            json.JSONDecodeError: If a result file contains invalid JSON.
         """
         if not scenario_name or not isinstance(scenario_name, str):
             logger.warning(f"Invalid scenario_name: {scenario_name}")
@@ -104,14 +128,17 @@ class ResultStorage:
         return results
 
     def get_recent_campaigns(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """
-        Retrieve recent campaign summaries.
+        """Retrieve recent campaign summaries.
 
         Args:
-            limit: Maximum campaigns to return
+            limit (int, optional): Maximum campaigns to return. Defaults to 10.
 
         Returns:
-            List of campaign summary dicts (newest first)
+            List[Dict[str, Any]]: List of campaign summary dicts (newest first).
+
+        Raises:
+            OSError: If there is an issue reading campaign files.
+            json.JSONDecodeError: If a campaign file contains invalid JSON.
         """
         if limit <= 0:
             logger.warning(f"Invalid limit: {limit}")
@@ -136,14 +163,17 @@ class ResultStorage:
         return campaigns
 
     def get_campaign_summary(self, campaign_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve specific campaign by ID.
+        """Retrieve specific campaign by ID.
 
         Args:
-            campaign_id: Campaign timestamp ID (YYYYMMDD_HHMMSS)
+            campaign_id (str): Campaign timestamp ID (YYYYMMDD_HHMMSS).
 
         Returns:
-            Campaign summary dict or None if not found
+            Optional[Dict[str, Any]]: Campaign summary dict or None if not found.
+
+        Raises:
+            OSError: If there is an issue reading the campaign file.
+            json.JSONDecodeError: If the campaign file contains invalid JSON.
         """
         if not campaign_id or not isinstance(campaign_id, str):
             logger.warning(f"Invalid campaign_id: {campaign_id}")
@@ -166,11 +196,11 @@ class ResultStorage:
             return None
 
     def get_result_statistics(self) -> Dict[str, Any]:
-        """
-        Get aggregate statistics across all results.
+        """Get aggregate statistics across all results.
 
         Returns:
-            Dict with statistics
+            Dict[str, Any]: Dict with statistics including total_campaigns,
+                total_scenarios, total_passed, and avg_pass_rate.
         """
         campaigns: List[Dict[str, Any]] = self.get_recent_campaigns(limit=999)
         if not campaigns:
@@ -193,14 +223,16 @@ class ResultStorage:
         }
 
     def clear_results(self, older_than_days: int = 30) -> int:
-        """
-        Remove old result files.
+        """Remove old result files.
 
         Args:
-            older_than_days: Delete files older than this many days
+            older_than_days (int, optional): Delete files older than this many days. Defaults to 30.
 
         Returns:
-            Number of files deleted
+            int: Number of files deleted.
+
+        Raises:
+            OSError: If there is an issue accessing or deleting files.
         """
         if older_than_days <= 0:
             logger.warning(f"Invalid age threshold: {older_than_days}")
