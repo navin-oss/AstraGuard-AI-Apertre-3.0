@@ -5,6 +5,7 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import numpy as np
 from collections import defaultdict
+import bisect
 
 
 class FaultState(str, Enum):
@@ -41,6 +42,8 @@ class AccuracyCollector:
         """Initialize accuracy collector."""
         self.ground_truth_events: List[GroundTruthEvent] = []
         self.agent_classifications: List[AgentClassification] = []
+        # Precomputed sorted ground truth events per satellite for efficient lookups
+        self._ground_truth_by_sat: Dict[str, List[GroundTruthEvent]] = defaultdict(list)
 
     def record_ground_truth(
         self,
@@ -65,6 +68,10 @@ class AccuracyCollector:
             confidence=confidence,
         )
         self.ground_truth_events.append(event)
+        # Add to precomputed sorted list
+        self._ground_truth_by_sat[sat_id].append(event)
+        # Keep sorted by timestamp
+        self._ground_truth_by_sat[sat_id].sort(key=lambda e: e.timestamp_s)
 
     def record_agent_classification(
         self,
@@ -169,12 +176,7 @@ class AccuracyCollector:
                 for c in self.agent_classifications
                 if c.predicted_fault != fault_type
                 and c.is_correct is False
-                and any(
-                    e.expected_fault_type == fault_type
-                    for e in self.ground_truth_events
-                    if e.satellite_id == c.satellite_id
-                    and abs(e.timestamp_s - c.timestamp_s) < 1.0
-                )
+                and self._find_ground_truth_fault(c.satellite_id, c.timestamp_s) == fault_type
             )
 
             # Calculate metrics
@@ -249,15 +251,8 @@ class AccuracyCollector:
 
         # Map classifications to ground truth
         for c in self.agent_classifications:
-            # Find matching ground truth
-            actual_fault = None
-            for e in self.ground_truth_events:
-                if (
-                    e.satellite_id == c.satellite_id
-                    and abs(e.timestamp_s - c.timestamp_s) < 1.0
-                ):
-                    actual_fault = e.expected_fault_type
-                    break
+            # Find matching ground truth using binary search
+            actual_fault = self._find_ground_truth_fault(c.satellite_id, c.timestamp_s)
 
             predicted = c.predicted_fault or "nominal"
             actual = actual_fault or "nominal"
