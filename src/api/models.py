@@ -81,8 +81,9 @@ class TelemetryInput(BaseModel):
 
     @field_validator('timestamp', mode='before')
     @classmethod
-    def set_timestamp(cls, v):
-        """Set timestamp to current server time if not provided in payload."""
+    def set_timestamp(cls, v: Optional[datetime]) -> datetime:
+        """Set timestamp to now if not provided."""
+
         if v is None:
             return datetime.now()
         return v
