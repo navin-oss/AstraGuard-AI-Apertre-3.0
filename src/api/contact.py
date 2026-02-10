@@ -430,7 +430,7 @@ async def get_submissions(
         ORDER BY submitted_at DESC
         LIMIT ? OFFSET ?
     """
-    params.extend([str(limit), str(offset)])
+    params.extend([limit, offset])
     
     rows = cursor.execute(query, params).fetchall()
     conn.close()
