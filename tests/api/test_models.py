@@ -23,6 +23,7 @@ from api.models import (
     APIKeyResponse,
     APIKeyCreateResponse,
     TokenResponse,
+    ModelValidationError,
 )
 class TestEnums:
     """Test enum classes."""
@@ -1069,3 +1070,264 @@ class TestEdgeCases:
             timestamp=datetime.now()
         )
         assert len(response2.allowed_actions) == 0
+
+
+class TestModelValidationError:
+    """Test ModelValidationError exception."""
+
+    def test_model_validation_error_creation(self):
+        """Test ModelValidationError can be created with context."""
+        error = ModelValidationError(
+            message="Validation failed",
+            field_name="voltage",
+            provided_value=-5.0,
+            constraints={"ge": 0, "le": 50}
+        )
+        assert error.message == "Validation failed"
+        assert error.field_name == "voltage"
+        assert error.provided_value == -5.0
+        assert error.constraints["ge"] == 0
+
+    def test_model_validation_error_to_dict(self):
+        """Test ModelValidationError can be serialized to dict."""
+        error = ModelValidationError(
+            message="Test error",
+            field_name="test_field",
+            provided_value="invalid",
+            constraints={"max_length": 10}
+        )
+        error_dict = error.to_dict()
+        assert error_dict["error_type"] == "ModelValidationError"
+        assert error_dict["message"] == "Test error"
+        assert error_dict["field_name"] == "test_field"
+
+
+class TestTelemetryInputEdgeCases:
+    """Test TelemetryInput edge cases with new validators."""
+
+    def test_timestamp_iso_format_with_z(self):
+        """Test timestamp parsing with Z suffix."""
+        telemetry = TelemetryInput(
+            voltage=12.5, temperature=25.0, gyro=0.05,
+            timestamp="2024-01-15T10:30:00Z"
+        )
+        assert telemetry.timestamp is not None
+        assert telemetry.timestamp.year == 2024
+        assert telemetry.timestamp.month == 1
+
+    def test_timestamp_invalid_string_uses_current(self, caplog):
+        """Test invalid timestamp string falls back to current time."""
+        import logging
+        with caplog.at_level(logging.WARNING):
+            telemetry = TelemetryInput(
+                voltage=12.5, temperature=25.0, gyro=0.05,
+                timestamp="invalid-timestamp"
+            )
+            assert telemetry.timestamp is not None
+            assert "timestamp_parsing_failed" in caplog.text
+
+    def test_timestamp_type_unknown_logs_warning(self, caplog):
+        """Test unknown timestamp type logs warning and uses current time."""
+        import logging
+        with caplog.at_level(logging.WARNING):
+            telemetry = TelemetryInput(
+                voltage=12.5, temperature=25.0, gyro=0.05,
+                timestamp=12345
+            )
+            assert telemetry.timestamp is not None
+            assert "timestamp_type_invalid" in caplog.text
+
+
+class TestTelemetryBatchEdgeCases:
+    """Test TelemetryBatch edge cases with new validators."""
+
+    def test_batch_maximum_size_enforced(self):
+        """Test batch maximum size constraint is enforced."""
+        telemetry_list = [
+            {"voltage": 12.5, "temperature": 25.0, "gyro": 0.05}
+            for _ in range(1000)
+        ]
+        batch = TelemetryBatch(telemetry=telemetry_list)
+        assert len(batch.telemetry) == 1000
+        
+        telemetry_list = [
+            {"voltage": 12.5, "temperature": 25.0, "gyro": 0.05}
+            for _ in range(1001)
+        ]
+        with pytest.raises(ValidationError):
+            TelemetryBatch(telemetry=telemetry_list)
+
+
+class TestAnomalyHistoryQueryEdgeCases:
+    """Test AnomalyHistoryQuery edge cases with new validators."""
+
+    def test_limit_boundary_values_enforced(self):
+        """Test limit constraints are enforced."""
+        query = AnomalyHistoryQuery(limit=1)
+        assert query.limit == 1
+        
+        query = AnomalyHistoryQuery(limit=1000)
+        assert query.limit == 1000
+        
+        with pytest.raises(ValidationError):
+            AnomalyHistoryQuery(limit=0)
+        
+        with pytest.raises(ValidationError):
+            AnomalyHistoryQuery(limit=1001)
+
+    def test_severity_min_boundary_values_enforced(self):
+        """Test severity_min constraints are enforced."""
+        query = AnomalyHistoryQuery(severity_min=0)
+        assert query.severity_min == 0
+        
+        query = AnomalyHistoryQuery(severity_min=1)
+        assert query.severity_min == 1
+        
+        with pytest.raises(ValidationError):
+            AnomalyHistoryQuery(severity_min=-0.1)
+        
+        with pytest.raises(ValidationError):
+            AnomalyHistoryQuery(severity_min=1.1)
+
+    def test_datetime_invalid_parsed_as_none(self, caplog):
+        """Test invalid datetime string is parsed as None with warning."""
+        import logging
+        with caplog.at_level(logging.WARNING):
+            query = AnomalyHistoryQuery(start_time="invalid-date")
+            assert query.start_time is None
+            assert "datetime_parse_failed" in caplog.text
+
+    def test_datetime_iso_format_with_z(self):
+        """Test datetime parsing with Z suffix."""
+        query = AnomalyHistoryQuery(start_time="2024-01-15T10:30:00Z")
+        assert query.start_time is not None
+        assert query.start_time.year == 2024
+
+
+class TestPhaseUpdateRequestEdgeCases:
+    """Test PhaseUpdateRequest edge cases with new validators."""
+
+    def test_phase_string_normalized(self, caplog):
+        """Test lowercase phase string is normalized to enum."""
+        import logging
+        with caplog.at_level(logging.INFO):
+            request = PhaseUpdateRequest(phase="safe_mode")
+            assert request.phase == MissionPhaseEnum.SAFE_MODE
+            assert "phase_normalized" in caplog.text
+
+    def test_invalid_phase_logged_with_valid_values(self, caplog):
+        """Test invalid phase logs valid options."""
+        import logging
+        with caplog.at_level(logging.ERROR):
+            with pytest.raises(ValidationError):
+                PhaseUpdateRequest(phase="INVALID_PHASE")
+            assert "invalid_phase_value" in caplog.text
+
+    def test_phase_wrong_type_raises_type_error(self):
+        """Test wrong type for phase raises TypeError."""
+        with pytest.raises(TypeError):
+            PhaseUpdateRequest(phase=123)
+
+
+class TestUserCreateRequestEdgeCases:
+    """Test UserCreateRequest edge cases with new validators."""
+
+    def test_username_whitespace_only_rejected(self):
+        """Test username that is only whitespace is rejected."""
+        with pytest.raises(ValidationError):
+            UserCreateRequest(
+                username="   ",
+                email="test@example.com",
+                role=UserRole.ANALYST
+            )
+
+    def test_username_special_prefix_logged(self, caplog):
+        """Test username starting with special char is logged."""
+        import logging
+        with caplog.at_level(logging.WARNING):
+            request = UserCreateRequest(
+                username="_specialuser",
+                email="test@example.com",
+                role=UserRole.ANALYST
+            )
+            assert request.username == "_specialuser"
+            assert "username_starts_with_special" in caplog.text
+
+    def test_username_normalized_to_lowercase(self):
+        """Test username is normalized to lowercase."""
+        request = UserCreateRequest(
+            username="TestUser",
+            email="test@example.com",
+            role=UserRole.ANALYST
+        )
+        assert request.username == "testuser"
+
+    def test_password_minimum_length_enforced(self):
+        """Test password minimum length is enforced."""
+        with pytest.raises(ValidationError):
+            UserCreateRequest(
+                username="testuser",
+                email="test@example.com",
+                role=UserRole.ANALYST,
+                password="short"
+            )
+
+
+class TestAPIKeyCreateRequestEdgeCases:
+    """Test APIKeyCreateRequest edge cases with new validators."""
+
+    def test_api_key_name_empty_rejected(self):
+        """Test empty API key name is rejected."""
+        with pytest.raises(ValidationError):
+            APIKeyCreateRequest(name="", permissions=["read"])
+
+    def test_api_key_name_whitespace_only_rejected(self):
+        """Test whitespace-only API key name is rejected."""
+        with pytest.raises(ValidationError):
+            APIKeyCreateRequest(name="   ", permissions=["read"])
+
+    def test_api_key_name_logged_when_valid(self, caplog):
+        """Test valid API key name is logged."""
+        import logging
+        with caplog.at_level(logging.INFO):
+            request = APIKeyCreateRequest(name="My Key", permissions=["read"])
+            assert "api_key_name_valid" in caplog.text
+
+    def test_invalid_permissions_logged(self, caplog):
+        """Test invalid permissions are logged with warning."""
+        import logging
+        with caplog.at_level(logging.WARNING):
+            request = APIKeyCreateRequest(
+                name="Test Key",
+                permissions=["read", "invalid_perm"]
+            )
+            assert "invalid_permissions_provided" in caplog.text
+            assert "invalid_perm" in caplog.text
+            assert request.permissions == ["read", "invalid_perm"]
+
+    def test_permissions_case_normalized(self):
+        """Test permissions are normalized to lowercase."""
+        request = APIKeyCreateRequest(
+            name="Test Key",
+            permissions=["READ", "WRITE"]
+        )
+        assert request.permissions == ["read", "write"]
+
+
+class TestLoginRequestEdgeCases:
+    """Test LoginRequest edge cases with new validators."""
+
+    def test_username_empty_rejected(self):
+        """Test empty username is rejected."""
+        with pytest.raises(ValidationError):
+            LoginRequest(username="", password="password123")
+
+    def test_username_whitespace_only_rejected(self):
+        """Test whitespace-only username is rejected."""
+        with pytest.raises(ValidationError):
+            LoginRequest(username="   ", password="password123")
+
+    def test_username_normalized_to_lowercase(self):
+        """Test username is normalized to lowercase."""
+        request = LoginRequest(username="TestUser", password="password123")
+        assert request.username == "testuser"
