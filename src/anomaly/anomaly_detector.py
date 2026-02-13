@@ -3,7 +3,7 @@ import os
 import pickle
 import logging
 import asyncio
-from typing import Dict, Tuple, Optional
+from typing import Any, Dict, Tuple, Optional, cast
 
 # Import centralized error handling
 from core.error_handling import (
@@ -32,13 +32,13 @@ import time
 
 logger = logging.getLogger(__name__)
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "anomaly_if.pkl")
-_MODEL: Optional[object] = None
-_MODEL_LOADED = False
-_USING_HEURISTIC_MODE = False
+MODEL_PATH: str = os.path.join(os.path.dirname(__file__), "anomaly_if.pkl")
+_MODEL: Optional[Any] = None
+_MODEL_LOADED: bool = False
+_USING_HEURISTIC_MODE: bool = False
 
 # Initialize circuit breaker for model loading
-_model_loader_cb = register_circuit_breaker(
+_model_loader_cb: CircuitBreaker = register_circuit_breaker(
     CircuitBreaker(
         name="anomaly_model_loader",
         failure_threshold=5,
@@ -127,7 +127,9 @@ async def _load_model_with_retry() -> bool:
     Model loading with retry wrapper.
     Retries on transient failures before circuit breaker engagement.
     """
-    return await _load_model_impl()
+    # Cast needed because @async_timeout decorator is untyped
+    result: bool = cast(bool, await _load_model_impl())
+    return result
 
 
 async def load_model() -> bool:
@@ -150,7 +152,8 @@ async def load_model() -> bool:
             _load_model_with_retry,  # Retry wrapper
             fallback=_load_model_fallback,
         )
-        return result
+        # Cast needed because circuit breaker call() returns Any
+        return cast(bool, result)
 
     except CircuitOpenError as e:
         logger.error(f"Circuit breaker open: {e}")
@@ -164,7 +167,7 @@ async def load_model() -> bool:
         return False
 
 
-def _detect_anomaly_heuristic(data: Dict) -> Tuple[bool, float]:
+def _detect_anomaly_heuristic(data: Dict[str, Any]) -> Tuple[bool, float]:
     """
     Perform rule-based anomaly detection as a fallback mechanism.
 
@@ -178,7 +181,7 @@ def _detect_anomaly_heuristic(data: Dict) -> Tuple[bool, float]:
     - Deterministic: Always returns a result given valid input.
 
     Args:
-        data (Dict): Raw telemetry dictionary.
+        data (Dict[str, Any]): Raw telemetry dictionary.
 
     Returns:
         Tuple[bool, float]: (is_anomalous, severity_score)
@@ -188,13 +191,13 @@ def _detect_anomaly_heuristic(data: Dict) -> Tuple[bool, float]:
         logger.warning(f"Heuristic mode received non-dict input: {type(data)}")
         return False, 0.0
 
-    score = 0.0
+    score: float = 0.0
 
     # Conservative thresholds for heuristic mode
     try:
-        voltage = float(data.get("voltage", 8.0))
-        temperature = float(data.get("temperature", 25.0))
-        gyro = abs(float(data.get("gyro", 0.0)))
+        voltage: float = float(data.get("voltage", 8.0))
+        temperature: float = float(data.get("temperature", 25.0))
+        gyro: float = abs(float(data.get("gyro", 0.0)))
 
         if voltage < 7.0 or voltage > 9.0:
             score += 0.4
@@ -211,12 +214,12 @@ def _detect_anomaly_heuristic(data: Dict) -> Tuple[bool, float]:
     score += random.uniform(0, 0.1)
 
     # Conservative threshold: be more sensitive to potential issues
-    is_anomalous = score > 0.5  # Lowered from 0.6 for more sensitivity
+    is_anomalous: bool = score > 0.5  # Lowered from 0.6 for more sensitivity
     return is_anomalous, min(score, 1.0)  # Cap at 1.0
 
 
 @async_timeout(seconds=10.0, operation_name="anomaly_detection")
-async def detect_anomaly(data: Dict) -> Tuple[bool, float]:
+async def detect_anomaly(data: Dict[str, Any]) -> Tuple[bool, float]:
     """
     Detect anomaly in telemetry data with resource-aware execution.
 
