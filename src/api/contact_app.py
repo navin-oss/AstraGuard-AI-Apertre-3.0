@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 
-
+logger: logging.Logger = logging.getLogger(__name__)
 app: FastAPI = FastAPI(title="AstraGuard Contact API (dev)")
 
 
@@ -27,7 +27,7 @@ ALLOWED_ORIGINS: List[str] = [
 ]
 
 app.add_middleware(
-    CORSMiddleware,  # type: ignore[arg-type]
+    CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
