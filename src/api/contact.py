@@ -257,16 +257,32 @@ async def send_email_notification(
     if SENDGRID_API_KEY:
         try:
             pass
+        except OSError as e:
+            logger.warning(
+                "SendGrid send failed (network/IO error), falling back to file log",
+                extra={
+                    "error_type": type(e).__name__,
+                    "operation": "send_email",
+                    "submission_id": submission_id,
+                    "email": submission.email
+                },
+                exc_info=True
+            )
+            await log_notification(submission, submission_id)
         except Exception as e:
             logger.warning(
-                "SendGrid send failed, falling back to file log",
-                exc_info=e,
+                "SendGrid send failed (unexpected), falling back to file log",
+                extra={
+                    "error_type": type(e).__name__,
+                    "operation": "send_email",
+                    "submission_id": submission_id,
+                    "email": submission.email
+                },
+                exc_info=True
             )
             await log_notification(submission, submission_id)
     else:
         await log_notification(submission, submission_id)
-
-
 
 @router.post("", response_model=ContactResponse, status_code=201)
 async def submit_contact_form(
@@ -327,17 +343,33 @@ async def submit_contact_form(
 
     try:
         await send_email_notification(submission, submission_id)
-    except Exception as e:
+    except OSError as e:
         logger.warning(
-            "Notification failed but submission was saved",
+            "Notification failed due to I/O error but submission was saved",
             extra={
                 "error_type": type(e).__name__,
                 "error_message": str(e),
                 "submission_id": submission_id,
                 "email": submission.email,
                 "subject": submission.subject,
+                "operation": "send_notification"
             },
+            exc_info=True
         )
+    except Exception as e:
+        logger.warning(
+            "Notification failed (unexpected) but submission was saved",
+            extra={
+                "error_type": type(e).__name__,
+                "error_message": str(e),
+                "submission_id": submission_id,
+                "email": submission.email,
+                "subject": submission.subject,
+                "operation": "send_notification"
+            },
+            exc_info=True
+        )
+
 
     return ContactResponse(
         success=True,
@@ -463,6 +495,9 @@ async def contact_health() -> dict[str, Any]:
             extra={
                 "error_type": type(e).__name__,
                 "error_message": str(e),
+                "operation": "health_check",
+                "db_path": str(DB_PATH)
             },
+            exc_info=True
         )
         raise HTTPException(status_code=503, detail="Service health check failed")
