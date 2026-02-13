@@ -23,12 +23,15 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
+# Declare variables BEFORE try block
+REDIS_AVAILABLE: bool
+AUTH_AVAILABLE: bool
+
 try:
     from backend.redis_client import RedisClient
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
-
 
 try:
     from core.auth import require_admin
@@ -37,7 +40,7 @@ except ImportError:
     AUTH_AVAILABLE = False
 
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 if AUTH_AVAILABLE:
@@ -48,22 +51,21 @@ else:
         return None
 
 
-router = APIRouter(prefix="/api/contact", tags=["contact"])
+router: APIRouter = APIRouter(prefix="/api/contact", tags=["contact"])
+
+DATA_DIR: Path = Path("data")
+DB_PATH: Path = DATA_DIR / "contact_submissions.db"
+NOTIFICATION_LOG: Path = DATA_DIR / "contact_notifications.log"
+CONTACT_EMAIL: str = os.getenv("CONTACT_EMAIL", "support@astraguard.ai")
+SENDGRID_API_KEY: Optional[str] = os.getenv("SENDGRID_API_KEY", None)
 
 
-DATA_DIR = Path("data")
-DB_PATH = DATA_DIR / "contact_submissions.db"
-NOTIFICATION_LOG = DATA_DIR / "contact_notifications.log"
-CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "support@astraguard.ai")
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", None)
-
-
-_raw_trusted = os.getenv("TRUSTED_PROXIES", "")
+_raw_trusted: str = os.getenv("TRUSTED_PROXIES", "")
 TRUSTED_PROXIES: set[str] = {ip.strip() for ip in _raw_trusted.split(",") if ip.strip()}
 
 
-RATE_LIMIT_SUBMISSIONS = 5
-RATE_LIMIT_WINDOW = 3600
+RATE_LIMIT_SUBMISSIONS: int = 5
+RATE_LIMIT_WINDOW: int = 3600
 
 
 class ContactSubmission(BaseModel):
@@ -175,7 +177,7 @@ class InMemoryRateLimiter:
             return True
 
 
-_in_memory_limiter = InMemoryRateLimiter()
+_in_memory_limiter: InMemoryRateLimiter = InMemoryRateLimiter()
 
 
 async def check_rate_limit(ip_address: str) -> bool:
@@ -408,6 +410,8 @@ async def get_submissions(
 
         async with conn.execute(count_query, params) as cursor:
             row = await cursor.fetchone()
+            if row is None:
+                raise HTTPException(status_code=500, detail="Failed to count submissions")
             total: int = row["total"]
 
         async with conn.execute(select_query, [*params, limit, offset]) as cursor:
@@ -466,6 +470,8 @@ async def contact_health() -> dict[str, Any]:
                 "SELECT COUNT(*) FROM contact_submissions"
             ) as cursor:
                 row = await cursor.fetchone()
+                if row is None:
+                    raise HTTPException(status_code=503, detail="Health check query failed")
                 total_submissions: int = row[0]
 
         rate_limiter_status = "redis" if REDIS_AVAILABLE else "in-memory"
