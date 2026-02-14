@@ -10,6 +10,9 @@ import sys
 import os
 import signal
 import logging
+from typing import Any, NoReturn, Optional
+from types import FrameType
+
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -30,10 +33,11 @@ except Exception as e:
     )
     sys.exit(1)
 
-def signal_handler(sig, frame):
+def signal_handler(sig: int, frame: Optional[FrameType]) -> NoReturn:
     """Handle shutdown signals gracefully."""
     logger.info(f"Received signal {sig}, shutting down gracefully...")
     sys.exit(0)
+
 
 if __name__ == "__main__":
     # Register signal handlers for graceful shutdown
