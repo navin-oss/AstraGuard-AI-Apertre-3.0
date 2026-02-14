@@ -132,6 +132,12 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -r src/config/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
         pip install -r src/config/requirements-test.txt
+
+    - name: Print Environment Info
+      run: |
+        python --version
+        pip freeze
+        env
     
     - name: Wait for Redis
       run: |
@@ -162,7 +168,7 @@ jobs:
         REDIS_URL: redis://localhost:6379
       run: |
         pytest tests/ \
-          -v \
+          -vv --maxfail=1 --durations=10 --log-cli-level=DEBUG \
           --cov=src/anomaly \
           --cov=src/classifier \
           --cov=src/memory_engine \
@@ -242,6 +248,12 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -r src/config/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
         pip install -r src/config/requirements-test.txt
+
+    - name: Print Environment Info
+      run: |
+        python --version
+        pip freeze
+        env
     
     - name: Wait for Redis
       run: |
@@ -272,7 +284,7 @@ jobs:
         REDIS_URL: redis://localhost:6379
       run: |
         pytest tests/ \
-          -v \
+          -vv --maxfail=1 --durations=10 --log-cli-level=DEBUG \
           --cov=src/anomaly \
           --cov=src/classifier \
           --cov=src/memory_engine \
