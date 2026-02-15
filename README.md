@@ -521,10 +521,16 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📚 Documentation
 
-- [Getting Started](docs/GETTING_STARTED.md)
-- [Technical Documentation](docs/TECHNICAL.md)
-- [API Reference](docs/API_REFERENCE.md)
-- [Architecture](docs/ARCHITECTURE.md)
+### Core Documentation
+- **[Getting Started](docs/GETTING_STARTED.md)** - Setup and installation guide
+- **[Technical Documentation](docs/TECHNICAL.md)** - Architecture and design
+- **[API Reference](docs/API_REFERENCE.md)** - API endpoints and usage
+- **[Architecture](docs/ARCHITECTURE.md)** - System architecture overview
+
+### Developer Tools
+- **[Dependency Conflict Resolver](docs/DEPENDENCY_CONFLICT_RESOLVER.md)** - Detect and resolve dependency conflicts
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to the project
+- **[Good First Issue Criteria](docs/GOOD_FIRST_ISSUE_CRITERIA.md)** - Guidelines for newcomers
 
 ---
 
