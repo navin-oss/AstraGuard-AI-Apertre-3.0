@@ -41,6 +41,9 @@ from api.models import (
     APIKeyCreateResponse,
     LoginRequest,
     TokenResponse,
+    FeedbackSubmitRequest,
+    FeedbackSubmitResponse,
+    FeedbackLabel,
 )
 from core.auth import (
     get_auth_manager,
@@ -1051,6 +1054,102 @@ async def get_anomaly_history(
         start_time=start_time,
         end_time=end_time
     )
+
+
+@app.post("/api/v1/feedback", response_model=FeedbackSubmitResponse, status_code=status.HTTP_201_CREATED)
+async def submit_feedback(
+    feedback: FeedbackSubmitRequest,
+    current_user: User = Depends(require_operator)
+) -> FeedbackSubmitResponse:
+    """
+    Submit operator feedback on anomaly detection and recovery actions.
+
+    This endpoint allows operators to provide feedback on the effectiveness of
+    recovery actions taken in response to detected anomalies. The feedback is
+    used to improve the adaptive learning system.
+
+    Requires operator or admin role authentication.
+
+    Args:
+        feedback: Feedback submission request containing fault details and assessment
+        current_user: Authenticated user (operator or admin)
+
+    Returns:
+        FeedbackSubmitResponse with submission confirmation and feedback ID
+
+    Raises:
+        HTTPException 400: Invalid feedback data
+        HTTPException 401: Authentication required
+        HTTPException 403: Insufficient permissions
+        HTTPException 500: Internal server error during feedback processing
+    """
+    try:
+        # Generate unique feedback ID
+        import uuid
+        feedback_id = f"fb_{uuid.uuid4().hex[:12]}"
+
+        # Create feedback event for storage
+        from models.feedback import FeedbackEvent
+
+        feedback_event = FeedbackEvent(
+            fault_id=feedback.fault_id,
+            timestamp=datetime.now(),
+            anomaly_type=feedback.anomaly_type,
+            recovery_action=feedback.recovery_action,
+            label=feedback.label,
+            operator_notes=feedback.operator_notes,
+            mission_phase=feedback.mission_phase.value,
+            confidence_score=feedback.confidence_score
+        )
+
+        # Store feedback in pending queue (JSON file for now, can be replaced with DB)
+        import json
+        from pathlib import Path
+
+        feedback_file = Path("feedback_pending.json")
+
+        # Load existing feedback
+        if feedback_file.exists():
+            try:
+                existing_feedback = json.loads(feedback_file.read_text())
+                if not isinstance(existing_feedback, list):
+                    existing_feedback = []
+            except json.JSONDecodeError:
+                existing_feedback = []
+        else:
+            existing_feedback = []
+
+        # Add new feedback with ID
+        feedback_data = feedback_event.model_dump()
+        feedback_data['feedback_id'] = feedback_id
+        feedback_data['submitted_by'] = current_user.username
+        feedback_data['submitted_at'] = datetime.now().isoformat()
+
+        existing_feedback.append(feedback_data)
+
+        # Save updated feedback
+        feedback_file.write_text(json.dumps(existing_feedback, indent=2, default=str))
+
+        # Log feedback submission
+        logger.info(
+            f"Feedback submitted: {feedback_id} by {current_user.username} "
+            f"for fault {feedback.fault_id} with label {feedback.label.value}"
+        )
+
+        return FeedbackSubmitResponse(
+            success=True,
+            feedback_id=feedback_id,
+            message=f"Feedback successfully submitted for fault {feedback.fault_id}",
+            timestamp=datetime.now()
+        )
+
+    except Exception as e:
+        logger.error(f"Feedback submission failed: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to submit feedback: {str(e)}"
+        ) from e
+
 
 
 # Authentication endpoints
