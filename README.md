@@ -515,7 +515,37 @@ print(result)
 
 ## 👥 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions from developers of all skill levels! 🎉
+
+### 👋 First Time Contributing?
+
+Start with a **Good First Issue** - perfect for newcomers!
+
+[![Good First Issues](https://img.shields.io/github/issues/sr-857/AstraGuard-AI-Apertre-3.0/good%20first%20issue?style=for-the-badge&label=Good%20First%20Issues&color=7057ff)](https://github.com/sr-857/AstraGuard-AI-Apertre-3.0/labels/good%20first%20issue)
+
+**What are Good First Issues?**
+- ✅ Well-defined with clear acceptance criteria
+- ✅ Beginner-friendly requiring minimal context  
+- ✅ Completable in 2-4 hours
+- ✅ Include guidance and resources
+
+### 📚 Contribution Resources
+
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Full guidelines and workflow
+- **[Good First Issue Criteria](docs/GOOD_FIRST_ISSUE_CRITERIA.md)** - How issues are selected
+- **[Code of Conduct](docs/CODE_OF_CONDUCT.md)** - Community standards
+
+### 💡 How to Get Started
+
+1. **Find an issue** you want to work on
+2. **Comment** on the issue to claim it
+3. **Fork** the repository
+4. **Create** a branch: `git checkout -b feature/issue-699-description`
+5. **Make** your changes
+6. **Test** thoroughly
+7. **Submit** a pull request
+
+**Questions?** Don't hesitate to ask in the issue comments or join our [WhatsApp group](https://chat.whatsapp.com/Ka6WKpDdKIxInvpLBO1nCB)!
 
 ---
 
