@@ -689,3 +689,42 @@ async def contact_health() -> dict[str, Any]:
             exc_info=True
         )
         raise HTTPException(status_code=503, detail="Service health check failed")
+
+
+@router.get("/pool-health")
+async def pool_health() -> dict[str, Any]:
+    """
+    Get connection pool health statistics.
+    
+    Returns pool metrics including active connections, idle connections,
+    total created, timeouts, and average wait time.
+    """
+    if not is_pool_enabled():
+        return {
+            "status": "disabled",
+            "message": "Connection pooling is not enabled"
+        }
+    
+    stats = await get_pool_stats()
+    
+    if stats is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Pool statistics unavailable"
+        )
+    
+    return {
+        "status": "healthy",
+        "pool": {
+            "active_connections": stats.active_connections,
+            "idle_connections": stats.idle_connections,
+            "total_connections": stats.total_connections,
+            "max_size": stats.max_size,
+            "total_created": stats.total_created,
+            "total_acquisitions": stats.total_acquisitions,
+            "total_releases": stats.total_releases,
+            "total_timeouts": stats.total_timeouts,
+            "total_errors": stats.total_errors,
+            "average_wait_time_ms": round(stats.average_wait_time * 1000, 2),
+        }
+    }
