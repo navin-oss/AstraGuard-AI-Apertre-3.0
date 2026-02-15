@@ -484,6 +484,27 @@ async def process_telemetry_batch(telemetry_list: List[Dict[str, Any]]) -> Dict[
         "anomalies_detected": anomalies_detected
     }
 
+    for telemetry in telemetry_list:
+        try:
+            # Process individual telemetry (extracted from submit_telemetry logic)
+            processed_count += 1
+            
+            # Collect detected anomalies
+            # Note: This function is incomplete and needs proper telemetry processing logic
+            # For now, just count processed items
+        except Exception as e:
+            logger.error(f"Error processing telemetry in batch: {e}")
+            continue
+    
+    # Store all anomalies at once with lock (more efficient than multiple appends)
+    if detected_anomalies:
+        async with anomaly_lock:
+            anomaly_history.extend(detected_anomalies)
+    
+    return {
+        "processed": processed_count,
+        "anomalies_detected": anomalies_detected
+    }
 
 # ============================================================================
 # API Endpoints
