@@ -15,8 +15,9 @@ Features:
 import json
 import logging
 import os
+from collections import Counter, deque
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Deque
 from dataclasses import dataclass, asdict
 from collections import Counter
 
@@ -95,8 +96,9 @@ class AnomalyReportGenerator:
         Args:
             max_history_days: Maximum days to keep historical data
         """
-        self.anomalies: List[AnomalyEvent] = []
-        self.recovery_actions: List[RecoveryAction] = []
+        # Deques keep insertion order and make history eviction O(1)
+        self.anomalies: Deque[AnomalyEvent] = deque()
+        self.recovery_actions: Deque[RecoveryAction] = deque()
         self.max_history_days = max_history_days
         logger.info("Anomaly report generator initialized")
 
@@ -282,8 +284,9 @@ class AnomalyReportGenerator:
             ReportGenerationError: If report generation fails.
         """
         try:
+            now = datetime.now()
             if end_time is None:
-                end_time = datetime.now()
+                end_time = now
             if start_time is None:
                 start_time = end_time - timedelta(hours=24)
 
@@ -293,16 +296,12 @@ class AnomalyReportGenerator:
                     f"start_time ({start_time}) must be before end_time ({end_time})"
                 )
 
-            # Filter anomalies and recovery actions by time range
-            filtered_anomalies = [
-                a for a in self.anomalies
-                if start_time <= a.timestamp <= end_time
-            ]
-
-            filtered_recoveries = [
-                r for r in self.recovery_actions
-                if start_time <= r.timestamp <= end_time
-            ]
+            # Filter and aggregate in a single pass; deques stay time-ordered
+            filtered_anomalies: List[AnomalyEvent] = []
+            anomaly_types: Counter[str] = Counter()
+            resolution_times: List[float] = []
+            resolved_anomalies = 0
+            critical_anomalies = 0
 
             # Calculate statistics - OPTIMIZED: Single pass instead of 7 separate passes
             total_anomalies = len(filtered_anomalies)
@@ -772,9 +771,10 @@ class AnomalyReportGenerator:
     def _cleanup_old_data(self) -> None:
         """Remove data older than max_history_days."""
         cutoff = datetime.now() - timedelta(days=self.max_history_days)
-
-        self.anomalies = [a for a in self.anomalies if a.timestamp > cutoff]
-        self.recovery_actions = [r for r in self.recovery_actions if r.timestamp > cutoff]
+        while self.anomalies and self.anomalies[0].timestamp <= cutoff:
+            self.anomalies.popleft()
+        while self.recovery_actions and self.recovery_actions[0].timestamp <= cutoff:
+            self.recovery_actions.popleft()
 
     def clear_history(self) -> None:
         """Clear all historical data."""
