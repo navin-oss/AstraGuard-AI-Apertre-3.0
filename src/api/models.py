@@ -12,6 +12,20 @@ from pydantic import BaseModel, Field, field_validator, model_validator, Validat
 logger = logging.getLogger(__name__)
 
 
+# Module-level constants for validation (performance optimization)
+# Caching these avoids recreating them on every validation
+_VALID_PERMISSIONS = frozenset({'read', 'write', 'admin', 'execute'})
+_VALID_PHASES_LIST = None  # Lazy-initialized on first use
+
+
+def _get_valid_phases() -> List[str]:
+    """Get list of valid phase values (cached)."""
+    global _VALID_PHASES_LIST
+    if _VALID_PHASES_LIST is None:
+        _VALID_PHASES_LIST = [p.value for p in MissionPhaseEnum]
+    return _VALID_PHASES_LIST
+
+
 class ModelValidationError(Exception):
     """Raised when model validation fails with actionable context."""
 
@@ -193,7 +207,7 @@ class PhaseUpdateRequest(BaseModel):
                 )
                 return phase
             except ValueError:
-                valid_phases = [p.value for p in MissionPhaseEnum]
+                valid_phases = _get_valid_phases()
                 logger.error(
                     "invalid_phase_value",
                     extra={
@@ -442,18 +456,17 @@ class APIKeyCreateRequest(BaseModel):
         if not v:
             raise ValueError("At least one permission must be specified")
 
-        valid_permissions: frozenset[str] = frozenset({'read', 'write', 'admin', 'execute'})
-        normalised = [p.lower() for p in v]
-        invalid_permissions = set(normalised) - valid_permissions
+        # Use cached valid_permissions set (performance optimization)
+        invalid_permissions = set(p.lower() for p in v) - _VALID_PERMISSIONS
 
         if invalid_permissions:
             logger.warning(
                 "invalid_permissions_provided",
                 extra={
-                    "invalid_permissions": sorted(invalid_permissions),
-                    "valid_permissions": sorted(valid_permissions),
-                    "action": "accepted_with_warning",
-                },
+                    "invalid_permissions": list(invalid_permissions),
+                    "valid_permissions": list(_VALID_PERMISSIONS),
+                    "action": "accepted_with_warning"
+                }
             )
 
         return normalised
