@@ -32,7 +32,7 @@ def _cached_get_secret(key: str, default=None):
 def setup_json_logging(
     log_level: str = "INFO",
     service_name: str = "astra-guard",
-    environment: str = get_secret("environment", "development")
+    environment: Optional[str] = None
 ) -> None:
     """Sets up JSON structured logging.
 
@@ -49,6 +49,10 @@ def setup_json_logging(
         None.
     """
     try:
+        # Use cached secret retrieval for consistency
+        if environment is None:
+            environment = _cached_get_secret("environment", "development")
+        
         # Validate log_level
         if not hasattr(logging, log_level.upper()):
             raise ValueError(f"Invalid log level: {log_level}")
@@ -83,9 +87,9 @@ def setup_json_logging(
         root_logger.handlers.clear()
         root_logger.addHandler(json_handler)
 
-        # Add global context with safe secret retrieval
+        # Add global context with cached secret retrieval
         try:
-            app_version = get_secret("app_version", "1.0.0")
+            app_version = _cached_get_secret("app_version", "1.0.0")
         except (KeyError, ValueError, Exception) as e:
             app_version = "1.0.0"
             print(f"Warning: Failed to retrieve app_version secret: {e}", file=sys.stderr)
