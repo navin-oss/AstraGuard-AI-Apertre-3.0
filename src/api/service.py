@@ -86,6 +86,7 @@ if TYPE_CHECKING:
 from fastapi.responses import Response
 from core.metrics import get_metrics_text, get_metrics_content_type
 from core.rate_limiter import RateLimiter, RateLimitMiddleware, get_rate_limit_config
+from core.shutdown import get_shutdown_manager
 from backend.redis_client import RedisClient
 import numpy as np
 from numpy.typing import NDArray
@@ -240,6 +241,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan manager."""
     global redis_client, telemetry_limiter, api_limiter
     
+    shutdown_manager = get_shutdown_manager()
+
     # Initialize database connection pool
     try:
         from src.db.database import init_pool
@@ -293,7 +296,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Initialize observability (if available)
     if OBSERVABILITY_ENABLED:
         try:
-            logger = get_logger(__name__)
+            # logger = get_logger(__name__)  # Use module-level logger
             setup_json_logging(log_level=get_secret("log_level", "INFO"))
             initialize_tracing()
             setup_auto_instrumentation()
