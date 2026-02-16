@@ -94,6 +94,7 @@ from astraguard.logging_config import get_logger
 import msgpack
 from fastapi import Request
 from api.middleware.network_optimization import ZstdMiddleware
+from prometheus_client import Gauge, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 logger = get_logger(__name__)
 
@@ -113,6 +114,17 @@ try:
 except ImportError:
     OBSERVABILITY_ENABLED = False
     print("Warning: Observability modules not available. Running without monitoring.")
+
+# Core Metrics
+UPTIME_SECONDS = Gauge(
+    "app_uptime_seconds",
+    "Application uptime in seconds"
+)
+
+HTTP_REQUEST_LATENCY = Histogram(
+    "http_request_latency_seconds",
+    "HTTP request latency"
+)
 
 
 # Configuration
@@ -383,6 +395,16 @@ app.add_middleware(
     sample_rate=sample_rate,
 )
 
+START_TIME = time.time()
+
+@app.middleware("http")
+async def monitoring_middleware(request: Request, call_next):
+    with HTTP_REQUEST_LATENCY.time():
+        response = await call_next(request)
+
+    UPTIME_SECONDS.set(time.time() - START_TIME)
+    return response
+
 security = HTTPBasic()
 
 # Credential validation flag (set during startup)
@@ -612,12 +634,6 @@ async def get_metrics() -> Response:
     - Retry attempts
     - Recovery actions
     """
-    if not OBSERVABILITY_ENABLED:
-        return Response(content="Observability not enabled", media_type="text/plain", status_code=503)
-    
-    from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-    from starlette.responses import Response
-    
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
@@ -809,13 +825,13 @@ async def health_ready() -> Response:
     )
 
 
-@app.get("/metrics")
-async def metrics(username: str = Depends(get_current_username)) -> Response:
-    """Prometheus metrics endpoint."""
-    return Response(
-        content=get_metrics_text(), 
-        media_type=get_metrics_content_type()
-    )
+# @app.get("/metrics")
+# async def metrics(username: str = Depends(get_current_username)) -> Response:
+#     """Prometheus metrics endpoint (Deprecated: merged with /metrics above)."""
+#     return Response(
+#         content=get_metrics_text(),
+#         media_type=get_metrics_content_type()
+#     )
 
 
 @app.get("/api/v1/system/diagnostics", status_code=status.HTTP_200_OK)
