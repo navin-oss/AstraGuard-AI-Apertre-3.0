@@ -164,7 +164,7 @@ async def get_api_key(
         # Pre-calculate values for logging (micro-optimization: ~150-300ns saved)
         api_key_prefix = api_key[:8] + "..." if len(api_key) > 8 else api_key
         client_ip = request.client.host if request.client else "unknown"
-        
+
         logger.warning(
             "Authentication failed: Key validation error",
             extra={
@@ -173,7 +173,7 @@ async def get_api_key(
                 "endpoint": request.url.path
             }
         )
-        
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(e)
@@ -240,19 +240,19 @@ def require_permission(permission: str) -> Callable[[APIKey], Awaitable[APIKey]]
 def initialize_from_env():
     """Initialize API keys from environment variables."""
     logger.info("Attempting to initialize API keys from environment")
-    
+
     api_keys_env: Optional[str] = get_secret("api_keys")
     
     if not api_keys_env:
         logger.info("No API keys found in environment, skipping initialization")
         return
-    
+
     try:
         # Expected format: name1:key1,name2:key2
         key_manager = get_api_key_manager()
         keys_processed = 0
         keys_skipped = 0
-        
+
         for key_pair in api_keys_env.split(","):
             if ":" not in key_pair:
                 logger.warning(
@@ -285,7 +285,7 @@ def initialize_from_env():
                 )
                 keys_skipped += 1
                 continue
-                
+
             # Create new API key
             key = APIKey(
                 key=key_value,
@@ -297,7 +297,7 @@ def initialize_from_env():
             key_manager.api_keys[key_value] = key
             key_hash = hashlib.sha256(key_value.encode()).hexdigest()
             key_manager.key_hashes[key_hash] = key_value
-            
+
             logger.info(
                 "API key loaded from environment",
                 extra={

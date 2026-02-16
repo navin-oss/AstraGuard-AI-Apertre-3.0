@@ -174,82 +174,6 @@ async def initialize_components() -> None:
         predictive_engine = await get_predictive_maintenance_engine(memory_store)
 
 
-def _check_credential_security() -> None:
-    """
-    Check and warn about insecure credential configurations at startup.
-
-    Security Checks:
-    1. Warn if METRICS_USER/METRICS_PASSWORD are not set
-    2. Warn if using common/weak credentials
-    3. Set global flag if using defaults
-    """
-    global _USING_DEFAULT_CREDENTIALS
-
-    # Use lowercase keys consistently (removed duplicate uppercase calls)
-    metrics_user: Optional[str] = get_secret("metrics_user")
-    metrics_password: Optional[str] = get_secret("metrics_password")
-
-    # Check if credentials are set
-    if not metrics_user or not metrics_password:
-        print("\n" + "=" * 70)
-        print("[WARNING] SECURITY WARNING: Metrics authentication not configured!")
-        print("=" * 70)
-        print("METRICS_USER and METRICS_PASSWORD environment variables are not set.")
-        print("The /metrics endpoint will return HTTP 500 until configured.")
-        print()
-        print("To fix this:")
-        print("  1. Set environment variables:")
-        print("    export METRICS_USER=your_username")
-        print("    export METRICS_PASSWORD=your_secure_password")
-        print("  2. Or add to .env file:")
-        print("    METRICS_USER=your_username")
-        print("    METRICS_PASSWORD=your_secure_password")
-        print("=" * 70 + "\n")
-        return
-
-    # List of weak/common credentials to warn about
-    weak_credentials: List[Tuple[str, str]] = [
-        ("admin", "admin"),
-        ("admin", "password"),
-        ("root", "root"),
-        ("admin", "12345"),
-        ("admin", "123456"),
-        ("user", "user"),
-        ("test", "test"),
-    ]
-
-    # Check for weak credentials
-    for weak_user, weak_pass in weak_credentials:
-        if metrics_user == weak_user and metrics_password == weak_pass:
-            _USING_DEFAULT_CREDENTIALS = True
-            print("\n" + "=" * 70)
-            print("[CRITICAL] SECURITY WARNING: Using default/weak credentials!")
-            print("=" * 70)
-            print(f"Detected credentials: {mask_secret(metrics_user)}/{mask_secret(metrics_password)}")
-            print()
-            print("[WARNING] THESE CREDENTIALS ARE PUBLICLY KNOWN AND INSECURE!")
-            print()
-            print("IMMEDIATE ACTION REQUIRED:")
-            print("  1. Change credentials before deploying to production")
-            print("  2. Use strong, randomly-generated passwords (20+ characters)")
-            print("  3. Consider using secrets management (Vault, AWS Secrets Manager)")
-            print()
-            print("Generate secure password:")
-            print("  python -c \"import secrets; print(secrets.token_urlsafe(32))\"")
-            print("=" * 70 + "\n")
-            break
-
-    # Check for short passwords
-    if len(metrics_password) < 12:
-        print("\n" + "=" * 70)
-        print("[WARNING] Weak password detected!")
-        print("=" * 70)
-        print(f"Password length: {len(metrics_password)} characters")
-        print("Recommended minimum: 16 characters")
-        print()
-        print("Consider using a stronger password:")
-        print("  python -c \"import secrets; print(secrets.token_urlsafe(32))\"")
-        print("=" * 70 + "\n")
 
 
 @asynccontextmanager
@@ -267,9 +191,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         print(f"[WARNING] Connection pool initialization failed: {e}")
         print("Falling back to direct database connections")
-
-    # Security: Check credentials at startup
-    _check_credential_security()
 
     # Initialize components
     await initialize_components()
@@ -317,7 +238,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             initialize_tracing()
             setup_auto_instrumentation()
             instrument_fastapi(app)
-            startup_metrics_server(port=9090)
+            # startup_metrics_server(port=9090)
             logger.info("event", "observability_initialized", service="astra-guard", version="1.0.0")
         except ImportError as e:
             logger.warning(f"Observability module missing dependency: {e}")
@@ -335,7 +256,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         await memory_store.save()
     if redis_client:
         await redis_client.close()
-    
+
     # Close database connection pool
     try:
         from src.db.database import close_pool

@@ -130,12 +130,12 @@ class TestGetApiKeyManager:
     def test_get_api_key_manager_uses_existing_instance(self):
         """Test that get_api_key_manager uses existing global instance."""
         import api.auth
-        
+
         mock_instance = Mock()
         api.auth._api_key_manager = mock_instance
-        
+
         manager = get_api_key_manager()
-        
+
         assert manager is mock_instance
 
 

@@ -4,11 +4,8 @@ Dummy Prometheus Metrics for AstraGuard AI
 
 from typing import Any, Callable
 
-# Dummy Registry
-class Registry:
-    pass
-
-REGISTRY = Registry()
+from prometheus_client import CollectorRegistry
+REGISTRY = CollectorRegistry(auto_describe=True)
 
 # Dummy Metrics
 class DummyMetric:
