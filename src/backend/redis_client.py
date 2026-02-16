@@ -10,6 +10,7 @@ Supports:
 - State publishing to cluster
 - Vote collection for consensus
 - Cluster state aggregation
+- TLS/SSL encrypted connections (rediss://)
 
 Migration path:
     # Old (still works):
@@ -20,14 +21,18 @@ Migration path:
     storage: Storage = RedisAdapter.from_config(config)
 """
 
+import ssl
 import redis.asyncio as aioredis
 import json
 import logging
 from typing import Optional, Dict, Any
 from datetime import datetime
+from urllib.parse import urlparse
 
 # Import timeout handling
 from core.timeout_handler import get_timeout_config
+from core.tls_config import get_tls_config, is_tls_required, create_ssl_context
+from core.tls_enforcement import TLSValidator, TLSEnforcementError
 import asyncio
 
 # Re-export storage components for compatibility
@@ -35,42 +40,171 @@ from backend.storage import Storage, RedisAdapter, MemoryStorage
 
 logger = logging.getLogger(__name__)
 
+
 # Compatibility exports
 __all__ = ["RedisClient", "Storage", "RedisAdapter", "MemoryStorage"]
 
 
 class RedisClient:
-    """Redis client for distributed coordination."""
+    """Redis client for distributed coordination with TLS support."""
 
-    def __init__(self, redis_url: str = "redis://localhost:6379", timeout: float = None):
-        """Initialize Redis client.
+    def __init__(
+        self, 
+        redis_url: str = "redis://localhost:6379", 
+        timeout: float = None,
+        use_tls: Optional[bool] = None,
+        ssl_context: Optional[ssl.SSLContext] = None,
+        service_name: Optional[str] = "redis"
+    ):
+        """Initialize Redis client with TLS support.
 
         Args:
             redis_url: Redis connection URL (default: localhost:6379)
+                       Use rediss:// for TLS-encrypted connections
             timeout: Default timeout for operations (uses env config if None)
+            use_tls: Force TLS usage (None = auto-detect from URL and config)
+            ssl_context: Optional SSL context for custom TLS configuration
+            service_name: Service name for TLS configuration lookup
         """
         self.redis_url = redis_url
         self.redis = None
         self.connected = False
         self.timeout = timeout or get_timeout_config().redis_timeout
+        self.service_name = service_name
+        self._ssl_context = ssl_context
+        
+        # TLS configuration
+        self.tls_config = get_tls_config(service_name)
+        self.tls_required = is_tls_required(service_name) if use_tls is None else use_tls
+        
+        # Validate and potentially upgrade URL to TLS
+        self.redis_url = self._validate_and_upgrade_url(redis_url)
+        
+        logger.info(f"RedisClient initialized with URL: {self._sanitize_url(self.redis_url)}")
+    
+    def _sanitize_url(self, url: str) -> str:
+        """Sanitize URL for logging (hide credentials)."""
+        try:
+            parsed = urlparse(url)
+            if parsed.password:
+                # Replace password with ***
+                safe_url = url.replace(f":{parsed.password}@", ":***@")
+                return safe_url
+        except Exception:
+            pass
+        return url
+    
+    def _validate_and_upgrade_url(self, url: str) -> str:
+        """
+        Validate Redis URL and upgrade to TLS if required.
+        
+        Args:
+            url: Redis URL to validate
+            
+        Returns:
+            Validated (and potentially upgraded) URL
+            
+        Raises:
+            TLSEnforcementError: If unencrypted Redis is used when TLS is required
+        """
+        parsed = urlparse(url)
+        
+        # Check if URL already uses TLS
+        if parsed.scheme == "rediss":
+            logger.debug("Redis URL uses TLS (rediss://)")
+            return url
+        
+        # Check if URL uses unencrypted Redis
+        if parsed.scheme == "redis":
+            if self.tls_required:
+                # Upgrade to TLS
+                tls_url = url.replace("redis://", "rediss://", 1)
+                logger.warning(
+                    f"Auto-upgraded Redis URL from redis:// to rediss:// "
+                    f"due to TLS enforcement requirement"
+                )
+                return tls_url
+            else:
+                logger.warning(
+                    f"Redis URL uses unencrypted connection (redis://). "
+                    f"Consider using rediss:// for production environments."
+                )
+                return url
+        
+        # Unknown scheme - assume Redis and add scheme
+        if not parsed.scheme:
+            if self.tls_required:
+                logger.info(f"Adding rediss:// scheme to URL (TLS required): {url}")
+                return f"rediss://{url}"
+            else:
+                logger.info(f"Adding redis:// scheme to URL: {url}")
+                return f"redis://{url}"
+        
+        return url
+    
+    def _create_ssl_context(self) -> Optional[ssl.SSLContext]:
+        """
+        Create SSL context for Redis TLS connections.
+        
+        Returns:
+            SSLContext or None if TLS is not enabled
+        """
+        if not self.tls_config.enabled:
+            return None
+        
+        # Use provided SSL context if available
+        if self._ssl_context:
+            return self._ssl_context
+        
+        try:
+            return create_ssl_context(self.service_name)
+        except Exception as e:
+            if self.tls_required:
+                raise TLSEnforcementError(f"Failed to create SSL context for Redis: {e}")
+            logger.warning(f"Could not create SSL context, using default: {e}")
+            return ssl.create_default_context()
+
 
     async def connect(self) -> bool:
-        """Establish connection to Redis.
+        """Establish connection to Redis with TLS support.
 
         Returns:
             True if successful, False otherwise
         """
         try:
-            self.redis = await aioredis.from_url(self.redis_url)
+            # Determine if we need SSL/TLS
+            parsed = urlparse(self.redis_url)
+            use_ssl = parsed.scheme == "rediss"
+            
+            connection_kwargs = {}
+            
+            if use_ssl:
+                ssl_context = self._create_ssl_context()
+                if ssl_context:
+                    connection_kwargs["ssl"] = ssl_context
+                    logger.debug("Using TLS for Redis connection")
+            
+            # Create Redis connection
+            self.redis = await aioredis.from_url(
+                self.redis_url,
+                **connection_kwargs
+            )
+            
             # Test connection
             await self.redis.ping()
             self.connected = True
-            logger.info(f"Connected to Redis: {self.redis_url}")
+            
+            # Log connection success (with TLS info)
+            tls_status = " (TLS enabled)" if use_ssl else " (unencrypted)"
+            logger.info(f"Connected to Redis{tls_status}: {self._sanitize_url(self.redis_url)}")
+            
             return True
+            
         except Exception as e:
             logger.error(f"Failed to connect to Redis: {e}")
             self.connected = False
             return False
+
 
     async def close(self):
         """Close Redis connection."""

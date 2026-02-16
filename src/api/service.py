@@ -10,14 +10,20 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional, Tuple, Deque
 from collections import deque
-from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi import FastAPI, HTTPException, status, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 import secrets
 from core.secrets import get_secret, mask_secret
 from pydantic import BaseModel
+
+# Import TLS enforcement modules
+from core.tls_config import get_tls_config, is_tls_required
+from core.tls_enforcement import TLSMiddleware, TLSValidator, TLSEnforcementError
+
 
 
 from api.models import (
@@ -284,6 +290,20 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add TLS enforcement middleware (early in the stack)
+# This ensures all internal service communication uses TLS
+tls_config = get_tls_config("api")
+if tls_config.enabled:
+    app.add_middleware(
+        TLSMiddleware,
+        enforce_tls=tls_config.enforce_tls,
+        service_name="api",
+        redirect_to_https=False,  # Reject HTTP rather than redirect for APIs
+        hsts_max_age=31536000,
+    )
+    logger.info(f"TLS middleware enabled (enforce={tls_config.enforce_tls})")
+
+
 # Include routers
 from api.contact import router as contact_router
 app.include_router(contact_router)
@@ -416,6 +436,71 @@ async def root() -> HealthCheckResponse:
         version="1.0.0",
         timestamp=datetime.now()
     )
+
+
+@app.get("/api/v1/tls/status")
+async def get_tls_status(request: Request) -> Dict[str, Any]:
+    """
+    Get TLS/SSL status for internal service communication.
+    
+    Returns:
+        Dictionary with TLS configuration status
+    """
+    tls_config = get_tls_config("api")
+    
+    # Check if request came over HTTPS
+    is_https = request.url.scheme == "https"
+    forwarded_proto = request.headers.get("x-forwarded-proto", "")
+    if forwarded_proto == "https":
+        is_https = True
+    
+    return {
+        "tls_enabled": tls_config.enabled,
+        "tls_enforced": tls_config.enforce_tls,
+        "tls_configured": tls_config.is_configured(),
+        "request_secure": is_https,
+        "min_tls_version": str(tls_config.min_tls_version) if tls_config.enabled else None,
+        "mutual_tls": tls_config.mutual_tls if tls_config.enabled else False,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.get("/api/v1/tls/validate")
+async def validate_tls_configuration() -> Dict[str, Any]:
+    """
+    Validate TLS configuration for all internal services.
+    
+    Returns:
+        Dictionary with validation results
+    """
+    validator = TLSValidator(service_name="api", strict=True)
+    
+    # Validate Redis URL if configured
+    redis_url = get_secret("redis_url") or "redis://localhost:6379"
+    redis_valid = False
+    redis_error = None
+    try:
+        redis_valid = validator.validate_redis_url(redis_url)
+    except TLSEnforcementError as e:
+        redis_error = str(e)
+    
+    # Get violations
+    violations = validator.get_violations()
+    
+    return {
+        "valid": len(violations) == 0,
+        "redis_url_valid": redis_valid,
+        "redis_url_error": redis_error,
+        "violations": violations,
+        "recommendations": [
+            "Use rediss:// for Redis connections",
+            "Use https:// for HTTP internal communication",
+            "Enable mutual TLS (mTLS) for service-to-service authentication",
+            "Configure TLS 1.2 or higher"
+        ] if violations else [],
+        "timestamp": datetime.now().isoformat()
+    }
+
 
 
 @app.get("/metrics", tags=["monitoring"])
