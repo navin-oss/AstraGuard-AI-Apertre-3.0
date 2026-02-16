@@ -115,13 +115,17 @@ except ImportError:
     OBSERVABILITY_ENABLED = False
     print("Warning: Observability modules not available. Running without monitoring.")
 
+from astraguard.observability import _safe_create_metric
+
 # Core Metrics
-UPTIME_SECONDS = Gauge(
+UPTIME_SECONDS = _safe_create_metric(
+    Gauge,
     "app_uptime_seconds",
     "Application uptime in seconds"
 )
 
-HTTP_REQUEST_LATENCY = Histogram(
+HTTP_REQUEST_LATENCY = _safe_create_metric(
+    Histogram,
     "http_request_latency_seconds",
     "HTTP request latency"
 )
