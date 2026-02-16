@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 RETRY_ATTEMPTS_TOTAL = _safe_create_metric(
     Counter,
     'astra_retry_attempts_total',
-    'Total retry attempts',
+    documentation='Total retry attempts',
     labelnames=['outcome']  # success, failed
 )
 
