@@ -12,7 +12,6 @@ import time
 import logging
 import asyncio
 from typing import Optional, Dict, Any, Generator, AsyncGenerator, cast
-from prometheus_client.metrics_core import MetricWrapperBase
 import socket
 import errno
 
@@ -121,7 +120,7 @@ def _safe_create_metric(
             pass
 
     try:
-        metric = metric_class(*args, **kwargs)
+        metric = metric_class(name, *args, **kwargs)
         _metric_cache[name] = metric  # Cache the metric
         return metric
     except ValueError as e:
