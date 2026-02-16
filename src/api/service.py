@@ -11,7 +11,7 @@ from typing import List, Optional, Any, Union, Dict, TYPE_CHECKING
 from datetime import datetime, timedelta
 from collections import deque
 from asyncio import Lock
-from fastapi import FastAPI, HTTPException, status, Depends, BackgroundTasks
+from fastapi import FastAPI, HTTPException, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import JSONResponse
@@ -85,13 +85,11 @@ if TYPE_CHECKING:
     from security_engine.predictive_maintenance import PredictiveMaintenanceEngine
 from fastapi.responses import Response
 from core.metrics import get_metrics_text, get_metrics_content_type
-from core.restart import get_restart_manager
 from core.rate_limiter import RateLimiter, RateLimitMiddleware, get_rate_limit_config
 from core.shutdown import get_shutdown_manager
 from backend.redis_client import RedisClient
 import numpy as np
 from numpy.typing import NDArray
-from core.restart import get_restart_manager
 from astraguard.logging_config import get_logger
 import msgpack
 from fastapi import Request
@@ -179,8 +177,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         print(f"[WARNING] Connection pool initialization failed: {e}")
         print("Falling back to direct database connections")
-    from core.shutdown import get_shutdown_manager
-    shutdown_manager = get_shutdown_manager()
 
     # Initialize components
     await initialize_components()
@@ -241,8 +237,19 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     yield
 
-    # Cleanup via manager
-    await shutdown_manager.execute_cleanup()
+    # Cleanup
+    if memory_store:
+        await memory_store.save()
+    if redis_client:
+        await redis_client.close()
+
+    # Close database connection pool
+    try:
+        from src.db.database import close_pool
+        await close_pool()
+        print("[OK] Database connection pool closed")
+    except Exception as e:
+        print(f"[WARNING] Connection pool cleanup failed: {e}")
 
 
 # Initialize FastAPI app
@@ -665,32 +672,10 @@ async def health_ready() -> Response:
 
 
 
-@app.post("/api/v1/system/restart", status_code=status.HTTP_202_ACCEPTED)
-async def restart_system(
-    background_tasks: BackgroundTasks,
+@app.get("/api/v1/system/diagnostics", status_code=status.HTTP_200_OK)
+async def get_system_diagnostics(
     current_user: User = Depends(require_admin)
 ):
-    """
-    Trigger a system restart.
-    
-    Requires ADMIN privileges.
-    Returns 202 Accepted immediately, then performs restart in background.
-    """
-    if OBSERVABILITY_ENABLED:
-        logger.warning(f"System restart initiated by user: {current_user.username}")
-        
-    restart_manager = get_restart_manager()
-    background_tasks.add_task(restart_manager.trigger_restart)
-    
-    return {
-        "status": "restarting",
-        "timestamp": datetime.now(),
-        "message": "System restart initiated"
-    }
-
-
-@app.post("/api/v1/telemetry", response_model=AnomalyResponse, status_code=status.HTTP_200_OK)
-async def submit_telemetry(telemetry: TelemetryInput, current_user: User = Depends(require_operator)) -> AnomalyResponse:
     """
     Get detailed system diagnostics.
     
