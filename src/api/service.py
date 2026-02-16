@@ -94,7 +94,8 @@ from astraguard.logging_config import get_logger
 import msgpack
 from fastapi import Request
 from api.middleware.network_optimization import ZstdMiddleware
-from prometheus_client import Gauge, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from monitoring.middleware import prometheus_middleware
+from prometheus_client import generate_latest
 
 logger = get_logger(__name__)
 
@@ -114,21 +115,6 @@ try:
 except ImportError:
     OBSERVABILITY_ENABLED = False
     print("Warning: Observability modules not available. Running without monitoring.")
-
-from astraguard.observability import _safe_create_metric
-
-# Core Metrics
-UPTIME_SECONDS = _safe_create_metric(
-    Gauge,
-    "app_uptime_seconds",
-    "Application uptime in seconds"
-)
-
-HTTP_REQUEST_LATENCY = _safe_create_metric(
-    Histogram,
-    "http_request_latency_seconds",
-    "HTTP request latency"
-)
 
 
 # Configuration
@@ -320,71 +306,8 @@ app.add_middleware(
     sample_rate=sample_rate,
 )
 
-START_TIME = time.time()
-
-@app.middleware("http")
-async def monitoring_middleware(request: Request, call_next):
-    with HTTP_REQUEST_LATENCY.time():
-        response = await call_next(request)
-
-    UPTIME_SECONDS.set(time.time() - START_TIME)
-    return response
-
-security = HTTPBasic()
-
-# Credential validation flag (set during startup)
-_USING_DEFAULT_CREDENTIALS = False
-
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)) -> str:
-    """
-    Validate HTTP Basic Auth credentials for metrics endpoint.
-
-    Security Notes:
-    - Credentials MUST be set via METRICS_USER and METRICS_PASSWORD env vars
-    - Default credentials trigger startup warning but are allowed for development
-    - Use secrets.compare_digest for timing-attack resistance
-
-    Args:
-        credentials: HTTP Basic Auth credentials from request
-
-    Returns:
-        Username if valid
-
-    Raises:
-        HTTPException 401: Invalid credentials
-        HTTPException 500: Credentials not configured
-    """
-    # Use lowercase keys consistently (removed duplicate uppercase calls)
-    correct_username = get_secret("metrics_user")
-    correct_password = get_secret("metrics_password")
-
-    # Security: Require credentials to be explicitly set
-    if not correct_username or not correct_password:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Metrics authentication not configured. Set METRICS_USER and METRICS_PASSWORD environment variables.",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    
-    current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = correct_username.encode("utf8")
-    is_correct_username = secrets.compare_digest(
-        current_username_bytes, correct_username_bytes
-    )
-    
-    current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = correct_password.encode("utf8")
-    is_correct_password = secrets.compare_digest(
-        current_password_bytes, correct_password_bytes
-    )
-    
-    if not (is_correct_username and is_correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
+# Prometheus metrics middleware
+app.middleware("http")(prometheus_middleware)
 
 
 # ============================================================================
@@ -549,17 +472,14 @@ async def validate_tls_configuration() -> Dict[str, Any]:
 
 @app.get("/metrics", tags=["monitoring"])
 async def get_metrics() -> Response:
-    """
-    Prometheus metrics endpoint.
+    """Prometheus metrics endpoint."""
+    if os.getenv("ENV") == "production":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Metrics hidden")
     
-    Returns Prometheus-formatted metrics including:
-    - HTTP request count and latency
-    - Anomaly detection metrics
-    - Circuit breaker state
-    - Retry attempts
-    - Recovery actions
-    """
-    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+    return Response(
+        generate_latest(),
+        media_type="text/plain"
+    )
 
 
 @app.get("/health", response_model=HealthCheckResponse)
@@ -750,13 +670,6 @@ async def health_ready() -> Response:
     )
 
 
-# @app.get("/metrics")
-# async def metrics(username: str = Depends(get_current_username)) -> Response:
-#     """Prometheus metrics endpoint (Deprecated: merged with /metrics above)."""
-#     return Response(
-#         content=get_metrics_text(),
-#         media_type=get_metrics_content_type()
-#     )
 
 
 @app.get("/api/v1/system/diagnostics", status_code=status.HTTP_200_OK)

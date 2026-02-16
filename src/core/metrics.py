@@ -1,10 +1,11 @@
 """
-Dummy Prometheus Metrics for AstraGuard AI
+Prometheus Metrics for AstraGuard AI
 """
 
 from typing import Any, Callable
+from prometheus_client import CollectorRegistry, generate_latest as prom_generate_latest, CONTENT_TYPE_LATEST
 
-from prometheus_client import CollectorRegistry
+# Real Registry
 REGISTRY = CollectorRegistry(auto_describe=True)
 
 # Dummy Metrics
@@ -27,10 +28,9 @@ class DummyMetric:
         return decorator
 
 Counter = Gauge = Histogram = Summary = DummyMetric
-CONTENT_TYPE_LATEST = "text/plain"
 
 def generate_latest(registry):
-    return b"# Dummy metrics"
+    return prom_generate_latest(registry)
 
 # Recreate all the metric names expected by imports
 CIRCUIT_STATE = DummyMetric()
@@ -71,7 +71,7 @@ def track_latency(metric_name: str, labels: dict = None):
     return decorator
 
 def get_metrics_text() -> str:
-    return "# Dummy metrics"
+    return generate_latest(REGISTRY).decode('utf-8')
 
 def get_metrics_content_type() -> str:
     return CONTENT_TYPE_LATEST

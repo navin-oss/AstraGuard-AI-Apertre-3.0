@@ -15,7 +15,6 @@ from .generators import (
     TelemetryGenerator,
     UserGenerator,
     APIKeyGenerator,
-    AnomalyGenerator,
 )
 
 __all__ = [
@@ -28,5 +27,4 @@ __all__ = [
     'TelemetryGenerator',
     'UserGenerator',
     'APIKeyGenerator',
-    'AnomalyGenerator',
 ]
