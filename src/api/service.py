@@ -94,6 +94,8 @@ from astraguard.logging_config import get_logger
 import msgpack
 from fastapi import Request
 from api.middleware.network_optimization import ZstdMiddleware
+from monitoring.middleware import prometheus_middleware
+from prometheus_client import generate_latest
 
 logger = get_logger(__name__)
 
@@ -158,82 +160,6 @@ async def initialize_components() -> None:
         predictive_engine = await get_predictive_maintenance_engine(memory_store)
 
 
-def _check_credential_security() -> None:
-    """
-    Check and warn about insecure credential configurations at startup.
-
-    Security Checks:
-    1. Warn if METRICS_USER/METRICS_PASSWORD are not set
-    2. Warn if using common/weak credentials
-    3. Set global flag if using defaults
-    """
-    global _USING_DEFAULT_CREDENTIALS
-
-    # Use lowercase keys consistently (removed duplicate uppercase calls)
-    metrics_user: Optional[str] = get_secret("metrics_user")
-    metrics_password: Optional[str] = get_secret("metrics_password")
-
-    # Check if credentials are set
-    if not metrics_user or not metrics_password:
-        print("\n" + "=" * 70)
-        print("[WARNING] SECURITY WARNING: Metrics authentication not configured!")
-        print("=" * 70)
-        print("METRICS_USER and METRICS_PASSWORD environment variables are not set.")
-        print("The /metrics endpoint will return HTTP 500 until configured.")
-        print()
-        print("To fix this:")
-        print("  1. Set environment variables:")
-        print("    export METRICS_USER=your_username")
-        print("    export METRICS_PASSWORD=your_secure_password")
-        print("  2. Or add to .env file:")
-        print("    METRICS_USER=your_username")
-        print("    METRICS_PASSWORD=your_secure_password")
-        print("=" * 70 + "\n")
-        return
-
-    # List of weak/common credentials to warn about
-    weak_credentials: List[Tuple[str, str]] = [
-        ("admin", "admin"),
-        ("admin", "password"),
-        ("root", "root"),
-        ("admin", "12345"),
-        ("admin", "123456"),
-        ("user", "user"),
-        ("test", "test"),
-    ]
-
-    # Check for weak credentials
-    for weak_user, weak_pass in weak_credentials:
-        if metrics_user == weak_user and metrics_password == weak_pass:
-            _USING_DEFAULT_CREDENTIALS = True
-            print("\n" + "=" * 70)
-            print("[CRITICAL] SECURITY WARNING: Using default/weak credentials!")
-            print("=" * 70)
-            print(f"Detected credentials: {mask_secret(metrics_user)}/{mask_secret(metrics_password)}")
-            print()
-            print("[WARNING] THESE CREDENTIALS ARE PUBLICLY KNOWN AND INSECURE!")
-            print()
-            print("IMMEDIATE ACTION REQUIRED:")
-            print("  1. Change credentials before deploying to production")
-            print("  2. Use strong, randomly-generated passwords (20+ characters)")
-            print("  3. Consider using secrets management (Vault, AWS Secrets Manager)")
-            print()
-            print("Generate secure password:")
-            print("  python -c \"import secrets; print(secrets.token_urlsafe(32))\"")
-            print("=" * 70 + "\n")
-            break
-
-    # Check for short passwords
-    if len(metrics_password) < 12:
-        print("\n" + "=" * 70)
-        print("[WARNING] Weak password detected!")
-        print("=" * 70)
-        print(f"Password length: {len(metrics_password)} characters")
-        print("Recommended minimum: 16 characters")
-        print()
-        print("Consider using a stronger password:")
-        print("  python -c \"import secrets; print(secrets.token_urlsafe(32))\"")
-        print("=" * 70 + "\n")
 
 
 @asynccontextmanager
@@ -251,9 +177,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         print(f"[WARNING] Connection pool initialization failed: {e}")
         print("Falling back to direct database connections")
-
-    # Security: Check credentials at startup
-    _check_credential_security()
 
     # Initialize components
     await initialize_components()
@@ -301,7 +224,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             initialize_tracing()
             setup_auto_instrumentation()
             instrument_fastapi(app)
-            startup_metrics_server(port=9090)
+            # startup_metrics_server(port=9090)
             logger.info("event", "observability_initialized", service="astra-guard", version="1.0.0")
         except ImportError as e:
             logger.warning(f"Observability module missing dependency: {e}")
@@ -383,61 +306,8 @@ app.add_middleware(
     sample_rate=sample_rate,
 )
 
-security = HTTPBasic()
-
-# Credential validation flag (set during startup)
-_USING_DEFAULT_CREDENTIALS = False
-
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)) -> str:
-    """
-    Validate HTTP Basic Auth credentials for metrics endpoint.
-
-    Security Notes:
-    - Credentials MUST be set via METRICS_USER and METRICS_PASSWORD env vars
-    - Default credentials trigger startup warning but are allowed for development
-    - Use secrets.compare_digest for timing-attack resistance
-
-    Args:
-        credentials: HTTP Basic Auth credentials from request
-
-    Returns:
-        Username if valid
-
-    Raises:
-        HTTPException 401: Invalid credentials
-        HTTPException 500: Credentials not configured
-    """
-    # Use lowercase keys consistently (removed duplicate uppercase calls)
-    correct_username = get_secret("metrics_user")
-    correct_password = get_secret("metrics_password")
-
-    # Security: Require credentials to be explicitly set
-    if not correct_username or not correct_password:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Metrics authentication not configured. Set METRICS_USER and METRICS_PASSWORD environment variables.",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    
-    current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = correct_username.encode("utf8")
-    is_correct_username = secrets.compare_digest(
-        current_username_bytes, correct_username_bytes
-    )
-    
-    current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = correct_password.encode("utf8")
-    is_correct_password = secrets.compare_digest(
-        current_password_bytes, correct_password_bytes
-    )
-    
-    if not (is_correct_username and is_correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
+# Prometheus metrics middleware
+app.middleware("http")(prometheus_middleware)
 
 
 # ============================================================================
@@ -602,23 +472,14 @@ async def validate_tls_configuration() -> Dict[str, Any]:
 
 @app.get("/metrics", tags=["monitoring"])
 async def get_metrics() -> Response:
-    """
-    Prometheus metrics endpoint.
+    """Prometheus metrics endpoint."""
+    if os.getenv("ENV") == "production":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Metrics hidden")
     
-    Returns Prometheus-formatted metrics including:
-    - HTTP request count and latency
-    - Anomaly detection metrics
-    - Circuit breaker state
-    - Retry attempts
-    - Recovery actions
-    """
-    if not OBSERVABILITY_ENABLED:
-        return Response(content="Observability not enabled", media_type="text/plain", status_code=503)
-    
-    from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-    from starlette.responses import Response
-    
-    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+    return Response(
+        generate_latest(),
+        media_type="text/plain"
+    )
 
 
 @app.get("/health", response_model=HealthCheckResponse)
@@ -809,13 +670,6 @@ async def health_ready() -> Response:
     )
 
 
-@app.get("/metrics")
-async def metrics(username: str = Depends(get_current_username)) -> Response:
-    """Prometheus metrics endpoint."""
-    return Response(
-        content=get_metrics_text(), 
-        media_type=get_metrics_content_type()
-    )
 
 
 @app.get("/api/v1/system/diagnostics", status_code=status.HTTP_200_OK)
