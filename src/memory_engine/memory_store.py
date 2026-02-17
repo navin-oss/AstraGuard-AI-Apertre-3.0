@@ -422,9 +422,11 @@ class AdaptiveMemoryStore:
     def _validate_path(self, path: str):
         """Security check for path traversal."""
         resolved_path = os.path.realpath(os.path.abspath(path))
+        # Bandit B108: Check for insecure usage of tmp directory
+        # We explicitly allow system temp dir for temporary operations,
+        # but ensure we are using the resolved system temp dir path.
         is_safe = (
             resolved_path.startswith(MEMORY_STORE_BASE_DIR) or
-            resolved_path.startswith("/tmp") or
             resolved_path.startswith(SYSTEM_TEMP_DIR)
         )
         if not is_safe:

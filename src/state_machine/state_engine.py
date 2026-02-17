@@ -201,8 +201,9 @@ class StateMachine:
                 for p in MissionPhase:
                     MISSION_PHASE.labels(phase=p.value).set(0)
                 MISSION_PHASE.labels(phase=phase.value).set(1)
-            except Exception:
-                pass  # Don't fail transition if metrics fail
+            except Exception as e:
+                # Bandit B110: Don't use pass in except block
+                logger.warning(f"Failed to update metrics during phase transition: {e}")
 
             logger.info(
                 "state_transition",
@@ -343,8 +344,9 @@ class StateMachine:
             for p in MissionPhase:
                 MISSION_PHASE.labels(phase=p.value).set(0)
             MISSION_PHASE.labels(phase=MissionPhase.SAFE_MODE.value).set(1)
-        except Exception:
-            pass
+        except Exception as e:
+            # Bandit B110: Don't use pass in except block
+            logger.warning(f"Failed to update metrics during forced safe mode: {e}")
 
         logger.warning(
             "forced_safe_mode_transition",

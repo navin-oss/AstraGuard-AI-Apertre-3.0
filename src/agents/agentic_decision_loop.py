@@ -19,6 +19,7 @@ except ImportError:
 from src.agents.core.engine import PromptEngine, PromptContext
 from src.agents.core.metrics import PromptMetrics
 from src.agents.core.schema import AgentOutput, ActionType
+from src.llm.context_manager import LLMContextManager
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ class AgenticDecisionLoop:
         self.agent_id = agent_id
         self.prompt_engine = prompt_engine or PromptEngine()
         self.metrics = PromptMetrics()
+        self.context_manager = LLMContextManager()
 
         # Initialize OpenAI client (Phase 6 - Structured Outputs)
         api_key = os.getenv("OPENAI_API_KEY")
@@ -53,7 +55,8 @@ class AgenticDecisionLoop:
         task: str,
         context: Dict[str, Any],
         complexity: float = 0.5,
-        task_type: str = "analysis"
+        task_type: str = "analysis",
+        session_id: Optional[str] = None
     ) -> AgentOutput:
         """
         Execute a single decision cycle.
@@ -63,6 +66,7 @@ class AgenticDecisionLoop:
             context: Dictionary of context data (telemetry, state, tools)
             complexity: Estimated task complexity (0.0 - 1.0)
             task_type: Type of task to execute (analysis, planning, execution)
+            session_id: Optional session ID for maintaining conversation context
 
         Returns:
             Validated AgentOutput object
@@ -85,9 +89,29 @@ class AgenticDecisionLoop:
             context=prompt_context
         )
 
+        # Context Management Integration
+        if session_id:
+            if not self.context_manager.has_session(session_id):
+                self.context_manager.create_session(session_id, messages)
+            else:
+                # Append only the new user message (typically the last one)
+                if messages:
+                    last_msg = messages[-1]
+                    # Ensure we are adding a user message
+                    if last_msg.get('role') == 'user':
+                        self.context_manager.add_message(session_id, last_msg['role'], last_msg['content'])
+
+            # Use full context from session
+            messages = self.context_manager.get_context(session_id)
+
         # 3. Execute LLM Call (Phase 6, 11)
         try:
             response_data = self._call_llm(messages)
+
+            # Update Context with Assistant Response
+            if session_id:
+                self.context_manager.add_message(session_id, "assistant", json.dumps(response_data))
+                self.context_manager.trim_context(session_id)
 
             # 4. Validate & Parse (Phase 6 - Pydantic)
             agent_output = AgentOutput(**response_data)

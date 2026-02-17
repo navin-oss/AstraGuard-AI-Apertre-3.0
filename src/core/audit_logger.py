@@ -163,8 +163,10 @@ class AuditLogger:
                     # Extract hash from integrity log entry
                     if '|' in last_line:
                         return last_line.split('|')[0]
-        except Exception:
-            pass
+        except Exception as e:
+            # Bandit B110: Don't use pass in except block
+            # We fail gracefully to default hash if log file is missing or corrupted
+            self.struct_logger.warning(f"Failed to load last hash from integrity log: {e}")
 
         return "0" * 64
 
