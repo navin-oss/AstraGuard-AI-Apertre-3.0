@@ -29,7 +29,6 @@ from api.service import (
     create_response,
     process_telemetry_batch,
     cleanup_expired_faults,
-    _check_credential_security,
     initialize_components,
     _process_single_telemetry,
     get_current_username,
@@ -55,7 +54,8 @@ from typing import Optional
 @pytest.fixture
 def client():
     """FastAPI test client."""
-    return TestClient(app)
+    # Use HTTPS base_url to satisfy TLSMiddleware
+    return TestClient(app, base_url="https://testserver")
 
 
 @pytest.fixture(autouse=True)
@@ -294,84 +294,6 @@ class TestHelperFunctions:
 
 class TestCredentialSecurity:
     """Test credential security checks."""
-
-    @patch('api.service.get_secret')
-    def test_check_credential_security_configured(self, mock_get_secret):
-        """Test credential security check when properly configured."""
-        mock_get_secret.side_effect = lambda key: {
-            'METRICS_USER': 'secure_user',
-            'METRICS_PASSWORD': 'very_strong_password_with_lots_of_chars_12345678',
-            'metrics_user': 'secure_user',
-            'metrics_password': 'very_strong_password_with_lots_of_chars_12345678'
-        }.get(key)
-
-        # Should not raise any exceptions
-        _check_credential_security()
-
-    @patch('api.service.get_secret')
-    @patch('builtins.print')
-    def test_check_credential_security_missing(self, mock_print, mock_get_secret):
-        """Test credential security check when credentials are missing."""
-        mock_get_secret.return_value = None
-
-        _check_credential_security()
-
-        # Should print warning messages
-        assert mock_print.call_count > 0
-        # Check that warning appears in print calls
-        print_args = str(mock_print.call_args_list)
-        assert "WARNING" in print_args or "METRICS_USER" in print_args
-
-    @patch('api.service.get_secret')
-    @patch('builtins.print')
-    def test_check_credential_security_weak_admin_admin(self, mock_print, mock_get_secret):
-        """Test credential security check with weak admin/admin credentials."""
-        mock_get_secret.side_effect = lambda key: {
-            'METRICS_USER': 'admin',
-            'METRICS_PASSWORD': 'admin',
-            'metrics_user': 'admin',
-            'metrics_password': 'admin'
-        }.get(key)
-
-        _check_credential_security()
-
-        # Should print security warnings
-        assert mock_print.call_count > 0
-        print_args = str(mock_print.call_args_list)
-        assert "WARNING" in print_args or "CRITICAL" in print_args
-
-    @patch('api.service.get_secret')
-    @patch('builtins.print')
-    def test_check_credential_security_weak_root_root(self, mock_print, mock_get_secret):
-        """Test credential security check with weak root/root credentials."""
-        mock_get_secret.side_effect = lambda key: {
-            'METRICS_USER': 'root',
-            'METRICS_PASSWORD': 'root',
-            'metrics_user': 'root',
-            'metrics_password': 'root'
-        }.get(key)
-
-        _check_credential_security()
-
-        assert mock_print.call_count > 0
-
-    @patch('api.service.get_secret')
-    @patch('builtins.print')
-    def test_check_credential_security_short_password(self, mock_print, mock_get_secret):
-        """Test credential security check with short password."""
-        mock_get_secret.side_effect = lambda key: {
-            'METRICS_USER': 'myuser',
-            'METRICS_PASSWORD': 'short',  # Only 5 characters
-            'metrics_user': 'myuser',
-            'metrics_password': 'short'
-        }.get(key)
-
-        _check_credential_security()
-
-        # Should warn about short password
-        assert mock_print.call_count > 0
-        print_args = str(mock_print.call_args_list)
-        assert "password" in print_args.lower() or "WARNING" in print_args
 
     def test_get_current_username_valid_credentials(self):
         """Test username validation with correct credentials."""
@@ -1442,13 +1364,14 @@ class TestEdgeCases:
         mock_state_machine.get_current_phase.return_value = mock_phase
         mock_memory_store.write = AsyncMock()
 
-        # Extreme telemetry values
-        telemetry = TelemetryInput(
+        # Extreme telemetry values - use model_construct to bypass validation for testing internal handling
+        telemetry = TelemetryInput.model_construct(
             voltage=999.9,
             temperature=999.9,
             gyro=999.9,
             current=999.9,
-            wheel_speed=99999
+            wheel_speed=99999,
+            timestamp=datetime.now()
         )
 
         result = await _process_single_telemetry(telemetry, 0.0)
