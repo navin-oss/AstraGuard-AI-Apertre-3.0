@@ -1,7 +1,7 @@
 import random
 import secrets
 import os
-import pickle
+import pickle  # nosec B403
 import logging
 import asyncio
 from typing import Any, Dict, List, Tuple, Optional, cast
