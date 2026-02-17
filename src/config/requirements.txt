@@ -70,3 +70,6 @@ msgpack
 # LLM & Tokenization
 openai>=1.0.0
 tiktoken>=0.5.0
+
+# CI/CD & Testing utilities
+docker>=7.0.0
