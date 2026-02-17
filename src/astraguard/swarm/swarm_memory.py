@@ -202,7 +202,7 @@ class SwarmAdaptiveMemory:
     async def stop(self) -> None:
         """Stop replication and save local cache."""
         self._running = False
-        self.local_cache.save()
+        await self.local_cache.save()
         if self._replication_task:
             self._replication_task.cancel()
         logger.info("SwarmAdaptiveMemory stopped")

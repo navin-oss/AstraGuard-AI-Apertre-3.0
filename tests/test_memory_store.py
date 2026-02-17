@@ -26,6 +26,8 @@ def _worker_concurrent_access(args):
             # Create a new memory store instance for this process
             worker_memory = AdaptiveMemoryStore(decay_lambda=0.1, max_capacity=100)
             worker_memory.storage_path = temp_store_path
+            worker_memory.wal_path = temp_store_path + ".wal"
+            worker_memory.batcher.filepath = worker_memory.wal_path
 
             # Load existing data
             worker_memory.load()
@@ -183,7 +185,9 @@ class TestAdaptiveMemoryStore:
 
         # Temporarily change storage path to corrupted file
         original_path = self.memory.storage_path
+        original_wal = self.memory.wal_path
         self.memory.storage_path = corrupted_path
+        self.memory.wal_path = corrupted_path + ".wal"
 
         try:
             # Attempt to load, should fail and clear memory
@@ -193,6 +197,7 @@ class TestAdaptiveMemoryStore:
         finally:
             # Restore original path and clean up
             self.memory.storage_path = original_path
+            self.memory.wal_path = original_wal
             os.unlink(corrupted_path)
 
     async def test_concurrent_save_load_operations(self):
@@ -207,6 +212,8 @@ class TestAdaptiveMemoryStore:
         try:
             # Initialize memory store with temp path
             self.memory.storage_path = temp_store_path
+            self.memory.wal_path = temp_store_path + ".wal"
+            self.memory.batcher.filepath = self.memory.wal_path
 
             # Add initial events
             for i in range(5):
@@ -230,6 +237,7 @@ class TestAdaptiveMemoryStore:
             # Reload and verify final state
             new_memory = AdaptiveMemoryStore()
             new_memory.storage_path = temp_store_path
+            new_memory.wal_path = temp_store_path + ".wal"
             loaded = new_memory.load()
             assert loaded, "Failed to load final state"
 
@@ -248,6 +256,49 @@ class TestAdaptiveMemoryStore:
             lock_file = temp_store_path + ".lock"
             if os.path.exists(lock_file):
                 os.unlink(lock_file)
+            if os.path.exists(temp_store_path + ".wal"):
+                try:
+                    os.unlink(temp_store_path + ".wal")
+                except OSError:
+                    pass
+
+    async def test_async_save_concurrency(self):
+        """Test that multiple async saves in the same loop do not race/corrupt."""
+        import tempfile
+        import os
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Configure store for temp path
+            storage_path = os.path.join(temp_dir, "test_async_concurrency.msgpack")
+            self.memory.storage_path = storage_path
+            self.memory.wal_path = storage_path + ".wal"
+            self.memory.batcher.filepath = self.memory.wal_path
+
+            # Add data
+            embedding = np.random.rand(384)
+            metadata = {'severity': 0.5, 'type': 'concurrency_test'}
+            await self.memory.write(embedding, metadata)
+
+            # Concurrent saves
+            async def spam_save():
+                for _ in range(5):
+                    await self.memory.save()
+                    await asyncio.sleep(0.01)
+
+            # Run concurrent tasks
+            tasks = [asyncio.create_task(spam_save()) for _ in range(5)]
+            await asyncio.gather(*tasks)
+
+            # Verify
+            assert os.path.exists(storage_path)
+
+            # Load back
+            new_store = AdaptiveMemoryStore()
+            new_store.storage_path = storage_path
+            new_store.wal_path = self.memory.wal_path
+            assert new_store.load()
+            assert len(new_store.memory) == 1
+            assert new_store.memory[0].metadata['type'] == 'concurrency_test'
 
 
 if __name__ == '__main__':

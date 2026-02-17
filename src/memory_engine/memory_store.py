@@ -23,6 +23,7 @@ import fasteners
 import aiofiles
 import msgpack
 import collections
+import functools
 
 if TYPE_CHECKING:
     import numpy as np
@@ -174,6 +175,7 @@ class AdaptiveMemoryStore:
 
         self._lock = threading.RLock()  # For in-memory thread safety
         self.batcher = WriteBatcher(self.wal_path, batch_size=BATCH_SIZE)
+        self._async_lock = asyncio.Lock() # For in-process async safety
 
     async def write(
         self,
@@ -288,58 +290,73 @@ class AdaptiveMemoryStore:
         """
         Async Checkpoint: Flush WAL and save full snapshot to disk (MsgPack).
         Triggers WAL truncation.
+        Uses aiofiles for non-blocking I/O and InterProcessLock for cross-process safety.
         """
         # First flush any pending WAL writes
         await self.batcher.flush()
 
-        # Offload sync I/O and serialization to thread pool to avoid blocking loop
-        # and to allow using blocking locks (fasteners)
-        await asyncio.to_thread(self._save_sync)
+        # Serialization (CPU bound)
+        # We can do this in a thread to avoid blocking the loop if the memory is large
+        packed_data = await asyncio.to_thread(self._serialize_memory)
+        if packed_data is None:
+            return
 
-    def _save_sync(self) -> None:
-        """Synchronous implementation of save with locking."""
-        # Serialize memory to bytes (CPU bound)
+        lock_path = self.storage_path + ".lock"
+        file_lock = fasteners.InterProcessLock(lock_path)
+        loop = asyncio.get_running_loop()
+
+        # Acquire in-process lock
+        async with self._async_lock:
+            try:
+                # Acquire inter-process lock (blocking, so offload to thread)
+                await loop.run_in_executor(None, file_lock.acquire)
+
+                try:
+                    self._validate_path(self.storage_path)
+
+                    # Offload directory creation
+                    await loop.run_in_executor(None, functools.partial(os.makedirs, os.path.dirname(self.storage_path), exist_ok=True))
+
+                    temp_path = self.storage_path + ".tmp"
+
+                    # Async write using aiofiles
+                    async with aiofiles.open(temp_path, "wb") as f:
+                        await f.write(packed_data)
+                        await f.flush()
+                        # os.fsync for durability
+                        await loop.run_in_executor(None, os.fsync, f.fileno())
+
+                    # Atomic replace (blocking but fast, compatible with Windows)
+                    await loop.run_in_executor(None, os.replace, temp_path, self.storage_path)
+
+                    # Truncate WAL
+                    if os.path.exists(self.wal_path):
+                         # Ignoring errors in remove for robustness
+                         try:
+                             await loop.run_in_executor(None, os.remove, self.wal_path)
+                         except OSError:
+                             pass
+
+                    logger.debug(f"Memory store saved to {self.storage_path}")
+
+                finally:
+                     # Release inter-process lock
+                     await loop.run_in_executor(None, file_lock.release)
+
+            except Exception as e:
+                logger.error(f"Failed to save memory store: {e}", exc_info=True)
+                raise
+
+    def _serialize_memory(self):
+        """Helper to serialize memory safely under lock."""
         with self._lock:
             try:
                 # Convert all events to dicts
                 data_list = [event.to_dict() for event in self.memory]
-                packed_data = msgpack.packb(data_list, default=msgpack_default, use_bin_type=True)
+                return msgpack.packb(data_list, default=msgpack_default, use_bin_type=True)
             except Exception as e:
                 logger.error(f"Failed to serialize memory: {e}")
-                return
-
-        # Write to disk sync with lock
-        try:
-            # Validate path security
-            self._validate_path(self.storage_path)
-
-            os.makedirs(os.path.dirname(self.storage_path), exist_ok=True)
-
-            # Use inter-process lock
-            lock_path = self.storage_path + ".lock"
-            with fasteners.InterProcessLock(lock_path):
-                # Write to temporary file first then rename (atomic)
-                temp_path = self.storage_path + ".tmp"
-                with open(temp_path, "wb") as f:
-                    f.write(packed_data)
-                    f.flush()
-                    os.fsync(f.fileno())
-
-                # Atomic rename
-                os.rename(temp_path, self.storage_path)
-
-            # Truncate WAL
-            if os.path.exists(self.wal_path):
-                try:
-                    os.remove(self.wal_path)
-                except OSError:
-                    pass
-
-            logger.debug(f"Memory store saved to {self.storage_path}")
-
-        except Exception as e:
-            logger.error(f"Failed to save memory store: {e}", exc_info=True)
-            raise
+                return None
 
     @measure_io(operation_type="snapshot_load", storage_type="disk")
     def load(self) -> bool:
