@@ -110,8 +110,9 @@ def setup_json_logging(
         else:
             # JSON formatter for standard logging
             formatter = jsonlogger.JsonFormatter(
-                fmt='%(timestamp)s %(level)s %(name)s %(message)s',
-                timestamp=True
+                fmt='%(timestamp)s %(levelname)s %(name)s %(message)s',
+                timestamp=True,
+                rename_fields={"levelname": "level"}
             )
             
         stream_handler.setFormatter(formatter)
