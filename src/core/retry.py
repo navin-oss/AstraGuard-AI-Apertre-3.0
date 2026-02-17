@@ -4,6 +4,7 @@ Implements automatic retry with exponential backoff before circuit breaker engag
 """
 import asyncio
 import random
+import secrets
 import time
 from functools import wraps
 from typing import Callable, Any, Tuple, Optional
@@ -268,15 +269,21 @@ class Retry:
         capped = min(exponential, self.max_delay)
         
         # Apply jitter
+        # Using secrets.SystemRandom for cryptographic strength where appropriate,
+        # though standard random is often sufficient for jitter.
+        # Bandit B311: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+        # We switch to SystemRandom to satisfy the linter and be safer.
+        sys_random = random.SystemRandom()
+
         if self.jitter_type == "full":
             # Full jitter: uniformly distributed between 0 and 2x delay
-            jittered = capped * random.uniform(0.5, 1.5)
+            jittered = capped * sys_random.uniform(0.5, 1.5)
         elif self.jitter_type == "equal":
             # Equal jitter: delay/2 + uniform random
-            jittered = (capped / 2) + (capped / 2) * random.random()
+            jittered = (capped / 2) + (capped / 2) * sys_random.random()
         elif self.jitter_type == "decorrelated":
             # Decorrelated jitter: recommended for general use
-            jittered = min(self.max_delay, capped * random.uniform(0, 3))
+            jittered = min(self.max_delay, capped * sys_random.uniform(0, 3))
         else:
             jittered = capped
         

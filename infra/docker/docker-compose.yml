@@ -55,7 +55,7 @@ services:
     image: redis:7-alpine
     container_name: astraguard-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     environment:
       - REDIS_APPENDONLY=yes
     volumes:
