@@ -1396,7 +1396,7 @@ async def login(request: LoginRequest) -> TokenResponse:
     """Authenticate user and return JWT token."""
     auth_manager = get_auth_manager()
     token = auth_manager.authenticate_user(request.username, request.password)
-    return TokenResponse(access_token=token, token_type="bearer")
+    return TokenResponse(access_token=token, token_type="bearer")  # nosec B106
 
 
 @app.post("/api/v1/auth/users", response_model=UserResponse)

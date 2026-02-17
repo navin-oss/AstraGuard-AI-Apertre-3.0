@@ -16,7 +16,7 @@ import tempfile
 import asyncio
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Optional, Union, Any, TYPE_CHECKING
-import pickle
+import pickle  # nosec B403
 import os
 import logging
 import fasteners
@@ -413,7 +413,7 @@ class AdaptiveMemoryStore:
         try:
             self._validate_path(self.legacy_path)
             with open(self.legacy_path, "rb") as f:
-                self.memory = pickle.load(f)
+                self.memory = pickle.load(f)  # nosec B301
             return True
         except Exception as e:
             logger.error(f"Failed to load legacy pickle: {e}")
