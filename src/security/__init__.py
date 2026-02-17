@@ -39,14 +39,14 @@ __version__ = "1.0.0"
 from .encryption import (
     DataEncryption as EncryptionEngine,
     DataEncryption,
-    # EncryptedData,
+    EncryptedData,
     # DataEncryptionKey,
     # KeyEncryptionKey,
-    # EncryptionAlgorithm,
-    # encrypt_data,
-    # decrypt_data,
-    # init_encryption_engine,
-    # get_encryption_engine,
+    EncryptionAlgorithm,
+    encrypt_data,
+    decrypt_data,
+    init_encryption_engine,
+    get_encryption_engine,
 )
 
 # Key management

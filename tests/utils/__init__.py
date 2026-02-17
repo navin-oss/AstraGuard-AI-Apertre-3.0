@@ -16,6 +16,9 @@ from .generators import (
     UserGenerator,
     APIKeyGenerator,
     AnomalyGenerator,
+    quick_telemetry,
+    quick_user,
+    quick_api_key,
 )
 
 __all__ = [
@@ -29,4 +32,7 @@ __all__ = [
     'UserGenerator',
     'APIKeyGenerator',
     'AnomalyGenerator',
+    'quick_telemetry',
+    'quick_user',
+    'quick_api_key',
 ]
